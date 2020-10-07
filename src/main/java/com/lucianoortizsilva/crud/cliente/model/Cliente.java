@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.pessoa.model;
+package com.lucianoortizsilva.crud.cliente.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -10,10 +10,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
+@Setter
+@Getter
 @ToString
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
