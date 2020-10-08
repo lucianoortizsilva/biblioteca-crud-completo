@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.config;
+package com.lucianoortizsilva.crud.seguranca;
 
 import java.util.Arrays;
 
@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,6 +17,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.lucianoortizsilva.crud.seguranca.autenticacao.JWTAuthenticationFilter;
+import com.lucianoortizsilva.crud.seguranca.autenticacao.JWTUtil;
+import com.lucianoortizsilva.crud.seguranca.autorizacao.JWTAuthorizationFilter;
 
 /**
  * 
@@ -36,12 +41,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			"/v2/api-docs", 
 			"/webjars/**" 
 	};
+	
+	private static final String[] ACESSO_PUBLIC_POST = { "/clientes", "/autenticacao" };
 
 	@Autowired
 	private Environment env;
 
 	@Autowired
 	private UserDetailsService userDetailsService;
+
+	@Autowired
+	private JWTUtil jwtUtil;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -50,7 +60,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			http.headers().frameOptions().disable();
 		}
 		http.cors().and().csrf().disable();
+		http.authorizeRequests().antMatchers(HttpMethod.POST, ACESSO_PUBLIC_POST).permitAll();
 		http.authorizeRequests().antMatchers(ACESSO_PUBLIC).permitAll().anyRequest().authenticated();
+		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), this.jwtUtil));
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), this.jwtUtil, this.userDetailsService));
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 

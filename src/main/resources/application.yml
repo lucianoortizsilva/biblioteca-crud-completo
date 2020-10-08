@@ -3,3 +3,6 @@ spring:
     active: test
   jpa:
     open-in-view: false
+jwt:
+  secret: sequenciadecaracteresparaassinartoken
+  expiration: 86400000
