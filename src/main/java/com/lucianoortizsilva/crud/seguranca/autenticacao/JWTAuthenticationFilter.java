@@ -2,13 +2,13 @@ package com.lucianoortizsilva.crud.seguranca.autenticacao;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,59 +17,64 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lucianoortizsilva.crud.seguranca.CredenciaisDTO;
+import com.google.gson.Gson;
+import com.lucianoortizsilva.crud.exception.dto.MensagemErroPadrao;
+import com.lucianoortizsilva.crud.seguranca.CredencialDTO;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	private AuthenticationManager authenticationManager;
-    
-    private JWTUtil jwtUtil;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
-    	setAuthenticationFailureHandler(new JWTAuthenticationFailureHandler());
-        this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
-    }
+	private JWTUtil jwtUtil;
+
+	public JWTAuthenticationFilter(final AuthenticationManager authenticationManager, final JWTUtil jwtUtil) {
+		log.info("Inicializando JWT filter");
+		setAuthenticationFailureHandler(new JWTAuthenticationFailureHandler());
+		this.authenticationManager = authenticationManager;
+		this.jwtUtil = jwtUtil;
+	}
 	
 	@Override
-    public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws AuthenticationException {
+	public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws AuthenticationException {
 		try {
-			CredenciaisDTO creds = new ObjectMapper().readValue(req.getInputStream(), CredenciaisDTO.class);
-	        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(creds.getEmail(), creds.getSenha(), new ArrayList<>());
-	        Authentication auth = authenticationManager.authenticate(authToken);
-	        return auth;
-		}
-		catch (IOException e) {
+			final CredencialDTO credencial = new ObjectMapper().readValue(req.getInputStream(), CredencialDTO.class);
+			log.info("Solicitando token para usuario com e-mail: {}", credencial.getEmail());
+			final UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(credencial.getEmail(), credencial.getSenha(), new ArrayList<>());
+			Authentication auth = authenticationManager.authenticate(authToken);
+			return auth;
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	@Override
-    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication auth) throws IOException, ServletException {
-		String username = ((UserSpringSecurity) auth.getPrincipal()).getUsername();
-        String token = jwtUtil.generateToken(username);
-        res.addHeader("Authorization", "Bearer " + token);
-        res.addHeader("access-control-expose-headers", "Authorization");
+	protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication auth) throws IOException, ServletException {
+		final String username = ((UserSpringSecurity) auth.getPrincipal()).getUsername();
+		final String token = jwtUtil.generateToken(username);
+		res.addHeader("Authorization", "Bearer " + token);
+		res.addHeader("access-control-expose-headers", "Authorization");
+		log.info("Token de autenticacao gerado com sucesso para: {}", username);
 	}
-	
+
 	private class JWTAuthenticationFailureHandler implements AuthenticationFailureHandler {
-        
 		@Override
-        public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-            response.setStatus(401);
-            response.setContentType("application/json"); 
-            response.getWriter().append(json());
-        }
-        
-        private String json() {
-            long date = new Date().getTime();
-            return "{\"timestamp\": " + date + ", "
-                + "\"status\": 401, "
-                + "\"error\": \"Não autorizado\", "
-                + "\"message\": \"Email ou senha inválidos\", "
-                + "\"path\": \"/login\"}";
-        }
-    }
-	
+		public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+			final MensagemErroPadrao mensagemPadraoErro = MensagemErroPadrao
+					.builder()
+					.status(HttpStatus.UNAUTHORIZED.value())
+					.erro("NAO AUTORIZADO")
+					.mensagem("Email ou senha invalidos")
+					.path("/login")
+					.build();
+			final Gson gson = new Gson();
+			response.setStatus(401);
+			response.setContentType("application/json");
+			response.getWriter().append(gson.toJson(mensagemPadraoErro));
+			log.error("{}. {}", mensagemPadraoErro.getErro(), mensagemPadraoErro.getMensagem());
+		}
+	}
+
 }

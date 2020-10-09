@@ -1,5 +1,12 @@
 package com.lucianoortizsilva.crud.cliente.model;
 
+import java.util.Objects;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum Perfil {
 
 	ADMIN(1, "ADMINISTRADOR"), 
@@ -8,31 +15,16 @@ public enum Perfil {
 	private int codigo;
 	private String descricao;
 
-	Perfil(Integer codigo, String descricao) {
-		this.codigo = codigo;
-		this.descricao = descricao;
-	}
-
-	public int getCodigo() {
-		return codigo;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public static Perfil toEnum(Integer codigo) {
-		if (codigo == null) {
+	public static Perfil toEnum(final Integer codigo) {
+		if (Objects.isNull(codigo)) {
 			return null;
 		}
-
 		for (final Perfil tc : Perfil.values()) {
 			if (codigo.equals(tc.getCodigo())) {
 				return tc;
 			}
 		}
-
-		throw new IllegalArgumentException("Id Invalido: " + codigo);
+		throw new IllegalArgumentException("Codigo do perfil invalido: " + codigo);
 	}
 
 }

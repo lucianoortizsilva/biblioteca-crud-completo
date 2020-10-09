@@ -42,7 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			"/webjars/**" 
 	};
 	
-	private static final String[] ACESSO_PUBLIC_POST = { "/clientes", "/autenticacao" };
+	private static final String[] ACESSO_PUBLIC_POST = { "/clientes" };
 
 	@Autowired
 	private Environment env;
@@ -77,7 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+	BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
