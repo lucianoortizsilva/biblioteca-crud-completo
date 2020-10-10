@@ -3,10 +3,12 @@ package com.lucianoortizsilva.crud.seguranca;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,6 +36,10 @@ import com.lucianoortizsilva.crud.seguranca.autorizacao.JWTAuthorizationFilter;
 @EnableGlobalMethodSecurity(prePostEnabled = true) // permite adicionar @PreAuthorize nos endpoints
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+	
+	@Value("${spring.profiles.active}")
+	private String profileActive;
+	
 	private static final String[] ACESSO_PUBLIC = { 
 			"/h2-console/**", 
 			"/swagger-resources/**", 
@@ -58,7 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// Para funcionar a page http://localhost:8080/h2-console:
 		if (Arrays.asList(this.env.getActiveProfiles()).contains("test")) {
 			http.headers().frameOptions().disable();
-		}
+		} 
 		http.cors().and().csrf().disable();
 		http.authorizeRequests().antMatchers(HttpMethod.POST, ACESSO_PUBLIC_POST).permitAll();
 		http.authorizeRequests().antMatchers(ACESSO_PUBLIC).permitAll().anyRequest().authenticated();
@@ -81,8 +87,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
 
-	protected void configure(org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(this.userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+	protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+		if("test".equalsIgnoreCase(profileActive)) {
+	        auth.inMemoryAuthentication()
+	         .withUser("luciano")
+	         .password("12345")
+	         .roles("ADMINISTRADOR, CLIENTE");
+		} else {
+			auth.userDetailsService(this.userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+		}
 	}
 
 }

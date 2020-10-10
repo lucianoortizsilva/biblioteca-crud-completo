@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.config;
+package com.lucianoortizsilva.crud.configuracao;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -21,7 +21,7 @@ public class InterceptaException {
 		final MensagemErroPadrao mensagemErro = MensagemErroPadrao
 				.builder()
 				.status(status.value())
-				.erro("NAO ENCONTRADO")
+				.erro(status.getReasonPhrase())
 				.mensagem(e.getMessage())
 				.path(request.getRequestURI())
 				.build();
@@ -31,7 +31,7 @@ public class InterceptaException {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<MensagemErroPadrao> validation(final MethodArgumentNotValidException e, final HttpServletRequest request) {
 		final HttpStatus status =  HttpStatus.UNPROCESSABLE_ENTITY;
-		final ValidaErro validaErro = new ValidaErro(status.value(), "VALIDACAO INVALIDA", "Erro de validação", request.getRequestURI());
+		final ValidaErro validaErro = new ValidaErro(status.value(), status.getReasonPhrase(), "Erro de validação", request.getRequestURI());
 		for(final FieldError fe: e.getBindingResult().getFieldErrors()) {
 			validaErro.addErro(fe.getField(), fe.getDefaultMessage());
 		}
@@ -44,7 +44,7 @@ public class InterceptaException {
 		final MensagemErroPadrao mensagemErro = MensagemErroPadrao
 				.builder()
 				.status(status.value())
-				.erro("NAO AUTORIZADO")
+				.erro(status.getReasonPhrase())
 				.mensagem(e.getMessage())
 				.path(request.getRequestURI())
 				.build();

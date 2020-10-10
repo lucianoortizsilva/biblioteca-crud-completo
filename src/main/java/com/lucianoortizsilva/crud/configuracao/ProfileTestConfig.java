@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.config;
+package com.lucianoortizsilva.crud.configuracao;
 
 import java.time.LocalDate;
 import java.util.Arrays;

@@ -3,6 +3,7 @@ package com.lucianoortizsilva.crud.cliente.controller;
 import java.util.Objects;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ public class ClienteController {
 	private ClienteService clienteService;
 
 	@GetMapping(value = "/{id}")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Cliente> findById(@PathVariable(value = "id") final Long id) {
 		final Cliente cliente = this.clienteService.findById(id);
 		if (Objects.isNull(cliente)) {

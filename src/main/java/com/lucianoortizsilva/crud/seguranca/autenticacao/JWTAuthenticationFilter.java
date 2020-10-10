@@ -62,10 +62,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	private class JWTAuthenticationFailureHandler implements AuthenticationFailureHandler {
 		@Override
 		public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+			final HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
 			final MensagemErroPadrao mensagemPadraoErro = MensagemErroPadrao
 					.builder()
-					.status(HttpStatus.UNAUTHORIZED.value())
-					.erro("NAO AUTORIZADO")
+					.status(httpStatus.value())
+					.erro(httpStatus.getReasonPhrase())
 					.mensagem("Email ou senha invalidos")
 					.path("/login")
 					.build();
