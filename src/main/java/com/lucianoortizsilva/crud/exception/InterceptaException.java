@@ -38,8 +38,8 @@ public class InterceptaException {
 		return ResponseEntity.status(status).body(validaErro);
 	}
 
-	@ExceptionHandler(AutorizacaoException.class)
-	public ResponseEntity<MensagemErroPadrao> authorization(final AutorizacaoException e, final HttpServletRequest request) {
+	@ExceptionHandler(NaoAutorizadoException.class)
+	public ResponseEntity<MensagemErroPadrao> authorization(final NaoAutorizadoException e, final HttpServletRequest request) {
 		final HttpStatus status =  HttpStatus.FORBIDDEN;
 		final MensagemErroPadrao mensagemErro = MensagemErroPadrao
 				.builder()
@@ -50,5 +50,18 @@ public class InterceptaException {
 				.build();
 		return ResponseEntity.status(status).body(mensagemErro);
 	}	
+	
+	@ExceptionHandler(DadoDuplicadoException.class)
+	public ResponseEntity<MensagemErroPadrao> dataIntegrity(final DadoDuplicadoException e, final HttpServletRequest request) {
+		final HttpStatus status =  HttpStatus.BAD_REQUEST;
+		final MensagemErroPadrao mensagemErro = MensagemErroPadrao
+				.builder()
+				.status(status.value())
+				.erro(status.getReasonPhrase())
+				.mensagem(e.getMessage())
+				.path(request.getRequestURI())
+				.build();
+		return ResponseEntity.status(status).body(mensagemErro);
+	}
 	
 }

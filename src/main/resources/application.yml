@@ -1,6 +1,7 @@
-spring:    
+spring:
   profiles:
-    active: test
+    active: @spring.profiles.active@
+
   jpa:
     open-in-view: false
 jwt:
