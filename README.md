@@ -1,4 +1,4 @@
-### Stack
+### Tech Stack
 - Java 8+
 - Spring Boot
 - Spring Security
