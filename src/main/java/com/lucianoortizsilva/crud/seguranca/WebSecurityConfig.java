@@ -49,7 +49,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	};
 	
 	private static final String[] ACESSO_PUBLIC_POST = { "/clientes", "/login" };
-	private static final String[] ACESSO_PUBLIC_GET = { "/clientes/{id}"};
 
 	@Autowired
 	private Environment env;
@@ -68,7 +67,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		} 
 		http.cors().and().csrf().disable();
 		http.authorizeRequests().antMatchers(HttpMethod.POST, ACESSO_PUBLIC_POST).permitAll();
-		http.authorizeRequests().antMatchers(HttpMethod.GET, ACESSO_PUBLIC_GET).permitAll();
 		http.authorizeRequests().antMatchers(ACESSO_PUBLIC).permitAll().anyRequest().authenticated();
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), this.jwtUtil));
 		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), this.jwtUtil, this.userDetailsService));
@@ -94,7 +92,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	        auth.inMemoryAuthentication()
 	         .withUser("luciano")
 	         .password("12345")
-	         .roles("ADMINISTRADOR, CLIENTE");
+	         .roles("ADMINISTRADOR");
 		} else {
 			auth.userDetailsService(this.userDetailsService).passwordEncoder(bCryptPasswordEncoder());
 		}

@@ -30,6 +30,7 @@ public class ClienteController {
 	private ClienteService clienteService;
 
 	@GetMapping(value = "/{id}")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Cliente> findById(@PathVariable(value = "id") final Long id) {
 		final Optional<Cliente> cliente = this.clienteService.findById(id);
 		if (cliente.isPresent()) {

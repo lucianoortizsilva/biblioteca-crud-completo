@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.lucianoortizsilva.crud.cliente.dto.ClienteDTO;
 import com.lucianoortizsilva.crud.cliente.model.Cliente;
+import com.lucianoortizsilva.crud.cliente.model.Perfil;
 import com.lucianoortizsilva.crud.cliente.repository.ClienteRepository;
 import com.lucianoortizsilva.crud.exception.DadoDuplicadoException;
 import com.lucianoortizsilva.crud.exception.NaoAutorizadoException;
@@ -42,7 +43,7 @@ public class ClienteService {
 		if (!exists(cliente)) {
 			throw new NaoEncontradoException("Cliente Não Encontrado");
 		}
-		
+
 		if (!clienteLogadoIgualClienteInformadoParaEditar(clienteDTO)) {
 			throw new NaoAutorizadoException("Não é possível editar dados de outro cliente!");
 		}
@@ -85,7 +86,21 @@ public class ClienteService {
 	}
 
 	public Optional<Cliente> findById(final Long id) {
-		return this.clienteRepository.findById(id);
+		if (clienteIdPesquisadoIgualAoClienteLogado(id) || perfilLogadoIgualAdmin()) {
+			return this.clienteRepository.findById(id);
+		} else {
+			throw new NaoAutorizadoException("Não tem autorização para visualizar dados de outros clientes.");
+		}
+	}
+
+	private boolean clienteIdPesquisadoIgualAoClienteLogado(final Long id) {
+		final UserSpringSecurity userSpringSecurity = UserService.authenticated();
+		return userSpringSecurity.getId().equals(id);
+	}
+
+	private boolean perfilLogadoIgualAdmin() {
+		final UserSpringSecurity userSpringSecurity = UserService.authenticated();
+		return userSpringSecurity.hasRole(Perfil.ADMINISTRADOR);
 	}
 
 	private static boolean exists(final Cliente cliente) {

@@ -9,7 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Perfil {
 
-	ADMIN(1, "ADMINISTRADOR"), 
+	ADMINISTRADOR(1, "ADMINISTRADOR"), 
 	CLIENTE(2, "CLIENTE"),
 	FINANCEIRO(3, "FINANCEIRO");
 
