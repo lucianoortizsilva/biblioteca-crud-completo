@@ -18,11 +18,11 @@ Como client, estou utilizando o [insomnia](https://insomnia.rest/)
 > **POST** **`http://localhost:8080/clientes`**
 ```json
 {
-	"nome" : "Luciano",
-	"email" : "luciano@gmail.com",
-	"senha" : "123456",
-	"cpf" : "12345178113",
+	"nome" : "Luciano Ortiz",
+	"email" : "admin@gmail.com",
+	"senha" : "12345",
+	"cpf" : "12345678987",
 	"nascimento" : "1984-01-31",
-	"perfis" : [2]
+	"perfis" : [1] /*admin*/
 }
 ```
