@@ -26,3 +26,7 @@ Como client, estou utilizando o [insomnia](https://insomnia.rest/)
 	"perfis" : [1] /*admin*/
 }
 ```
+
+<hr>
+
+> **GET** **`http://localhost:8080/clientes/1`**
