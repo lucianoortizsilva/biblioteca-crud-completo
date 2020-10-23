@@ -37,37 +37,29 @@ public class ClienteService {
 	}
 
 	@Transactional
-	public void update(final ClienteDTO clienteDTO) {
-		final Cliente cliente = getById(clienteDTO.getId());
-
-		if (!exists(cliente)) {
+	public void update(final ClienteDTO dto) {
+		final Cliente cliente = getById(dto.getId());
+		if (!exists(cliente))
 			throw new NaoEncontradoException("Cliente Não Encontrado");
-		}
-
-		if (!clienteLogadoIgualClienteInformadoParaEditar(clienteDTO)) {
+		if (!clienteLogadoIgualClienteInformadoParaEditar(dto))
 			throw new NaoAutorizadoException("Não é possível editar dados de outro cliente!");
-		}
-
-		cliente.setCpf(clienteDTO.getCpf());
-		cliente.setNome(clienteDTO.getNome());
-		cliente.setEmail(clienteDTO.getEmail());
-		cliente.setPerfis(clienteDTO.getPerfis());
-		cliente.setNascimento(clienteDTO.getNascimento());
-		cliente.setSenha(this.bCryptPasswordEncoder.encode(clienteDTO.getSenha()));
-
+		this.clienteFromTo(cliente, dto);
 		this.clienteRepository.save(cliente);
-
 	}
 
-	private Cliente getById(final Long id) {
-		final Optional<Cliente> optional = this.clienteRepository.findById(id);
-		Cliente cliente = null;
-		if (optional.isPresent()) {
-			cliente = optional.get();
+	@Transactional
+	public void delete(final Long id) {
+		if (!perfilLogadoIgualAdministrador())
+			throw new NaoAutorizadoException("Não tem autorização para deletar clientes.");
+
+		final Cliente cliente = this.getById(id);
+		if (exists(cliente)) {
+			throw new NaoEncontradoException("Cliente não encontrado");
+		} else {
+			this.clienteRepository.deleteById(id);
 		}
-		return cliente;
 	}
-
+	
 	public Cliente fromDTO(final ClienteDTO dto) {
 		final Cliente cliente = new Cliente();
 		cliente.setId(dto.getId());
@@ -79,12 +71,7 @@ public class ClienteService {
 		cliente.setSenha(this.bCryptPasswordEncoder.encode(dto.getSenha()));
 		return cliente;
 	}
-
-	private static boolean clienteLogadoIgualClienteInformadoParaEditar(final ClienteDTO cliente) {
-		final UserSpringSecurity userSpringSecurity = UserService.authenticated();
-		return userSpringSecurity.getId().equals(cliente.getId());
-	}
-
+	
 	public Optional<Cliente> findById(final Long id) {
 		if (clienteIdPesquisadoIgualAoClienteLogado(id) || perfilLogadoIgualAdministrador()) {
 			return this.clienteRepository.findById(id);
@@ -93,31 +80,41 @@ public class ClienteService {
 		}
 	}
 
-	private boolean clienteIdPesquisadoIgualAoClienteLogado(final Long id) {
+	private void clienteFromTo(final Cliente cliente, final ClienteDTO dto) {
+		cliente.setCpf(dto.getCpf());
+		cliente.setNome(dto.getNome());
+		cliente.setEmail(dto.getEmail());
+		cliente.setPerfis(dto.getPerfis());
+		cliente.setNascimento(dto.getNascimento());
+		cliente.setSenha(this.bCryptPasswordEncoder.encode(dto.getSenha()));
+	}
+
+	private Cliente getById(final Long id) {
+		final Optional<Cliente> optional = this.clienteRepository.findById(id);
+		Cliente cliente = null;
+		if (optional.isPresent()) {
+			cliente = optional.get();
+		}
+		return cliente;
+	}
+
+	private static boolean clienteLogadoIgualClienteInformadoParaEditar(final ClienteDTO cliente) {
+		final UserSpringSecurity userSpringSecurity = UserService.authenticated();
+		return userSpringSecurity.getId().equals(cliente.getId());
+	}
+
+	private static boolean clienteIdPesquisadoIgualAoClienteLogado(final Long id) {
 		final UserSpringSecurity userSpringSecurity = UserService.authenticated();
 		return userSpringSecurity.getId().equals(id);
 	}
 
-	private boolean perfilLogadoIgualAdministrador() {
+	private static boolean perfilLogadoIgualAdministrador() {
 		final UserSpringSecurity userSpringSecurity = UserService.authenticated();
 		return userSpringSecurity.hasRole(Perfil.ADMINISTRADOR);
 	}
 
 	private static boolean exists(final Cliente cliente) {
 		return !Objects.isNull(cliente);
-	}
-
-	@Transactional
-	public void delete(final Long id) {
-		if (!perfilLogadoIgualAdministrador()) {
-			throw new NaoAutorizadoException("Não tem autorização para deletar clientes.");
-		}
-		final Cliente cliente = this.getById(id);
-		if (Objects.isNull(cliente)) {
-			throw new NaoEncontradoException("Cliente não encontrado");
-		} else {
-			this.clienteRepository.deleteById(id);
-		}
 	}
 
 }
