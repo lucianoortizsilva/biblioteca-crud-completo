@@ -86,7 +86,7 @@ public class ClienteService {
 	}
 
 	public Optional<Cliente> findById(final Long id) {
-		if (clienteIdPesquisadoIgualAoClienteLogado(id) || perfilLogadoIgualAdmin()) {
+		if (clienteIdPesquisadoIgualAoClienteLogado(id) || perfilLogadoIgualAdministrador()) {
 			return this.clienteRepository.findById(id);
 		} else {
 			throw new NaoAutorizadoException("Não tem autorização para visualizar dados de outros clientes.");
@@ -98,13 +98,26 @@ public class ClienteService {
 		return userSpringSecurity.getId().equals(id);
 	}
 
-	private boolean perfilLogadoIgualAdmin() {
+	private boolean perfilLogadoIgualAdministrador() {
 		final UserSpringSecurity userSpringSecurity = UserService.authenticated();
 		return userSpringSecurity.hasRole(Perfil.ADMINISTRADOR);
 	}
 
 	private static boolean exists(final Cliente cliente) {
 		return !Objects.isNull(cliente);
+	}
+
+	@Transactional
+	public void delete(final Long id) {
+		if (!perfilLogadoIgualAdministrador()) {
+			throw new NaoAutorizadoException("Não tem autorização para deletar clientes.");
+		}
+		final Cliente cliente = this.getById(id);
+		if (Objects.isNull(cliente)) {
+			throw new NaoEncontradoException("Cliente não encontrado");
+		} else {
+			this.clienteRepository.deleteById(id);
+		}
 	}
 
 }
