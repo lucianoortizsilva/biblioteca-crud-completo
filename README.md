@@ -60,3 +60,8 @@ No client de sua preferência, estou utilizando o [insomnia](https://insomnia.re
 ```
 
 <hr>
+
+*5º Deletar Cliente:* (Necessário adicionar 'Authorization: Bearer ...' no header)
+> **DELETE** **`http://localhost:8080/clientes/1`**
+
+<hr>
