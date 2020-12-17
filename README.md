@@ -31,7 +31,7 @@ No client de sua preferência, estou utilizando o [insomnia](https://insomnia.re
 <hr>
 
 *2º Buscar Authorization:*
-> **GET** **`http://localhost:8080/login`**
+> **POST** **`http://localhost:8080/login`**
 ```json
 {
 	"email" : "admin@gmail.com",
@@ -43,3 +43,14 @@ No client de sua preferência, estou utilizando o [insomnia](https://insomnia.re
 
 *3º Buscar Cliente:* (Necessário adicionar 'Authorization: Bearer ...' no header)
 > **GET** **`http://localhost:8080/clientes/1`**
+
+*4º Atualizar Cliente:* (Necessário adicionar 'Authorization: Bearer ...' no header)
+> **PUT** **`http://localhost:8080/clientes/1`**
+{
+	"nome" : "Luciano Ortiz - teste",
+	"email" : "admin@gmail.com",
+	"senha" : "12345",
+	"cpf" : "12345678987",
+	"nascimento" : "1984-01-31",
+	"perfis" : [1] /*admin*/
+}
