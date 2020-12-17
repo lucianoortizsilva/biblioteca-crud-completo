@@ -11,10 +11,11 @@ CRUD completo de "Clientes", utilizando JWT, e testes de integração com @WebMv
 - Execute **`mvn clean package -Pprod spring-boot:run`**
 
 ### Como executar endpoints ?
-Como client, estou utilizando o [insomnia](https://insomnia.rest/)
+No client de sua preferência, estou utilizando o [insomnia](https://insomnia.rest/)
 
 #### Endpoints:
 
+*1º Cadastrar um cliente:*
 > **POST** **`http://localhost:8080/clientes`**
 ```json
 {
@@ -29,4 +30,16 @@ Como client, estou utilizando o [insomnia](https://insomnia.rest/)
 
 <hr>
 
+*2º Buscar Authorization:*
+> **GET** **`http://localhost:8080/login`**
+```json
+{
+	"email" : "admin@gmail.com",
+	"senha" : "12345"
+}
+```
+
+<hr>
+
+*3º Buscar Cliente:* (Necessário adicionar 'Authorization: Bearer ...' no header)
 > **GET** **`http://localhost:8080/clientes/1`**
