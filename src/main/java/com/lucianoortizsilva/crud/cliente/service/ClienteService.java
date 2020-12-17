@@ -54,9 +54,9 @@ public class ClienteService {
 
 		final Cliente cliente = this.getById(id);
 		if (exists(cliente)) {
-			throw new NaoEncontradoException("Cliente não encontrado");
-		} else {
 			this.clienteRepository.deleteById(id);
+		} else {
+			throw new NaoEncontradoException("Cliente não encontrado");
 		}
 	}
 	
