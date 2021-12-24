@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.lucianoortizsilva.crud.cliente.dto.ClienteDTO;
 import com.lucianoortizsilva.crud.cliente.model.Cliente;
 import com.lucianoortizsilva.crud.cliente.service.ClienteService;
+import com.lucianoortizsilva.crud.seguranca.autenticacao.UserDetailsCustom;
 
 import lombok.AllArgsConstructor;
 
@@ -40,23 +42,23 @@ public class ClienteController {
 
 	@PutMapping(value = "/{id}")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<Void> update(@Valid @RequestBody final ClienteDTO dto, @PathVariable(value = "id") final Long id) {
+	public ResponseEntity<Void> update(@Valid @RequestBody final ClienteDTO dto, @PathVariable(value = "id") final Long id, @AuthenticationPrincipal final UserDetailsCustom usuario) {
 		dto.setId(id);
-		this.clienteService.update(dto);
+		this.clienteService.update(dto, usuario);
 		return ResponseEntity.noContent().build();
 	}
 	
 	@DeleteMapping(value = "/{id}")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<Void> delete(@PathVariable(value = "id") final Long id) {
-		this.clienteService.delete(id);
+	public ResponseEntity<Void> delete(@PathVariable(value = "id") final Long id, @AuthenticationPrincipal final UserDetailsCustom usuario) {
+		this.clienteService.delete(id, usuario);
 		return ResponseEntity.noContent().build();
 	}
 	
 	@GetMapping(value = "/{id}")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<Cliente> findById(@PathVariable(value = "id") final Long id) {
-		final Optional<Cliente> cliente = this.clienteService.findById(id);
+	public ResponseEntity<Cliente> findById(@PathVariable(value = "id") final Long id, @AuthenticationPrincipal final UserDetailsCustom usuario) {
+		final Optional<Cliente> cliente = this.clienteService.findById(id, usuario);
 		if (cliente.isPresent()) {
 			return ResponseEntity.ok().body(cliente.get());
 		} else {

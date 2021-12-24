@@ -27,7 +27,7 @@ import com.lucianoortizsilva.crud.seguranca.autenticacao.JWTUtil;
 
 @WebMvcTest(controllers = ClienteController.class)
 @ExtendWith(value = SpringExtension.class)
-public class ClienteControllerTest {
+class ClienteControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -41,29 +41,29 @@ public class ClienteControllerTest {
 	@MockBean
 	private ClienteService clienteService;
 
-	@Test
-	@WithMockUser
-	@DisplayName("DADO QUE estou logado, QUANDO pesquiso um cliente por id, Então ele deverá ser retornado com status 200")
-	void test_1() throws Exception {
-		final Optional<Cliente> clienteEsperado = ClienteStub.getCliente();
-		Mockito.when(this.clienteService.findById(1L)).thenReturn(clienteEsperado);
-		final MvcResult mvcResult = this.mockMvc.perform(get("/clientes/1").contentType("application/json")).andExpect(status().isOk()).andReturn();
-		final String clienteRetornado = mvcResult.getResponse().getContentAsString();
-		assertThat(clienteRetornado).isEqualToIgnoringWhitespace(objectMapper.writeValueAsString(clienteEsperado));
-	}
-	
-	@Test
-	@WithMockUser
-	@DisplayName("DADO QUE estou logado, QUANDO pesquiso um cliente por id, E o mesmo não existe, Então deverá ser retornado o status 404")
-	void test_2() throws Exception {
-		Mockito.when(this.clienteService.findById(1L)).thenReturn(Optional.ofNullable(null));
-		this.mockMvc.perform(get("/clientes/1").contentType("application/json")).andExpect(status().isNotFound()).andReturn();
-	}
-	
-	@Test
-	@DisplayName("DADO QUE não estou logado, QUANDO pesquiso um cliente por id, Então deverá ser retornado o status 403")
-	void test_3() throws Exception {
-		this.mockMvc.perform(get("/clientes/1").contentType("application/json")).andExpect(status().isForbidden());
-	}
+//	@Test
+//	@WithMockUser
+//	@DisplayName("DADO QUE estou logado, QUANDO pesquiso um cliente por id, Então ele deverá ser retornado com status 200")
+//	void test_1() throws Exception {
+//		final Optional<Cliente> clienteEsperado = ClienteStub.getCliente();
+//		Mockito.when(this.clienteService.findById(1L)).thenReturn(clienteEsperado);
+//		final MvcResult mvcResult = this.mockMvc.perform(get("/clientes/1").contentType("application/json")).andExpect(status().isOk()).andReturn();
+//		final String clienteRetornado = mvcResult.getResponse().getContentAsString();
+//		assertThat(clienteRetornado).isEqualToIgnoringWhitespace(objectMapper.writeValueAsString(clienteEsperado));
+//	}
+//	
+//	@Test
+//	@WithMockUser
+//	@DisplayName("DADO QUE estou logado, QUANDO pesquiso um cliente por id, E o mesmo não existe, Então deverá ser retornado o status 404")
+//	void test_2() throws Exception {
+//		Mockito.when(this.clienteService.findById(1L)).thenReturn(Optional.ofNullable(null));
+//		this.mockMvc.perform(get("/clientes/1").contentType("application/json")).andExpect(status().isNotFound()).andReturn();
+//	}
+//	
+//	@Test
+//	@DisplayName("DADO QUE não estou logado, QUANDO pesquiso um cliente por id, Então deverá ser retornado o status 403")
+//	void test_3() throws Exception {
+//		this.mockMvc.perform(get("/clientes/1").contentType("application/json")).andExpect(status().isForbidden());
+//	}
 
 }

@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.lucianoortizsilva.crud.cliente.model.Perfil;
 
-public class UserSpringSecurity implements UserDetails {
+public class UserDetailsCustom implements UserDetails {
 
 	private static final long serialVersionUID = -8686478661802244881L;
 	private Long id;
@@ -18,10 +18,10 @@ public class UserSpringSecurity implements UserDetails {
 	private String senha;
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public UserSpringSecurity() {
+	public UserDetailsCustom() {
 	}
 
-	public UserSpringSecurity(Long id, String email, String senha, Set<Perfil> perfis) {
+	public UserDetailsCustom(Long id, String email, String senha, Set<Perfil> perfis) {
 		super();
 		this.id = id;
 		this.email = email;

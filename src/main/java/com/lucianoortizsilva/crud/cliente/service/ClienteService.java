@@ -14,8 +14,7 @@ import com.lucianoortizsilva.crud.cliente.repository.ClienteRepository;
 import com.lucianoortizsilva.crud.exception.DadoDuplicadoException;
 import com.lucianoortizsilva.crud.exception.NaoAutorizadoException;
 import com.lucianoortizsilva.crud.exception.NaoEncontradoException;
-import com.lucianoortizsilva.crud.seguranca.UserService;
-import com.lucianoortizsilva.crud.seguranca.autenticacao.UserSpringSecurity;
+import com.lucianoortizsilva.crud.seguranca.autenticacao.UserDetailsCustom;
 
 import lombok.AllArgsConstructor;
 
@@ -37,19 +36,19 @@ public class ClienteService {
 	}
 
 	@Transactional
-	public void update(final ClienteDTO dto) {
+	public void update(final ClienteDTO dto, final UserDetailsCustom usuario) {
 		final Cliente cliente = getById(dto.getId());
 		if (!exists(cliente))
 			throw new NaoEncontradoException("Cliente Não Encontrado");
-		if (!clienteLogadoIgualClienteInformadoParaEditar(dto))
+		if (!clienteLogadoIgualClienteInformadoParaEditar(dto, usuario))
 			throw new NaoAutorizadoException("Não é possível editar dados de outro cliente!");
 		this.clienteFromTo(cliente, dto);
 		this.clienteRepository.save(cliente);
 	}
 
 	@Transactional
-	public void delete(final Long id) {
-		if (!perfilLogadoIgualAdministrador())
+	public void delete(final Long id, final UserDetailsCustom usuario) {
+		if (!perfilLogadoIgualAdministrador(usuario))
 			throw new NaoAutorizadoException("Não tem autorização para deletar clientes.");
 
 		final Cliente cliente = this.getById(id);
@@ -72,8 +71,8 @@ public class ClienteService {
 		return cliente;
 	}
 	
-	public Optional<Cliente> findById(final Long id) {
-		if (clienteIdPesquisadoIgualAoClienteLogado(id) || perfilLogadoIgualAdministrador()) {
+	public Optional<Cliente> findById(final Long id, final UserDetailsCustom usuario) {
+		if (clienteIdPesquisadoIgualAoClienteLogado(id, usuario) || perfilLogadoIgualAdministrador(usuario)) {
 			return this.clienteRepository.findById(id);
 		} else {
 			throw new NaoAutorizadoException("Não tem autorização para visualizar dados de outros clientes.");
@@ -98,19 +97,16 @@ public class ClienteService {
 		return cliente;
 	}
 
-	private static boolean clienteLogadoIgualClienteInformadoParaEditar(final ClienteDTO cliente) {
-		final UserSpringSecurity userSpringSecurity = UserService.authenticated();
-		return userSpringSecurity.getId().equals(cliente.getId());
+	private static boolean clienteLogadoIgualClienteInformadoParaEditar(final ClienteDTO cliente, UserDetailsCustom usuario) {
+		return usuario.getId().equals(cliente.getId());
 	}
 
-	private static boolean clienteIdPesquisadoIgualAoClienteLogado(final Long id) {
-		final UserSpringSecurity userSpringSecurity = UserService.authenticated();
-		return userSpringSecurity.getId().equals(id);
+	private static boolean clienteIdPesquisadoIgualAoClienteLogado(final Long id, final UserDetailsCustom usuario) {
+		return usuario.getId().equals(id);
 	}
 
-	private static boolean perfilLogadoIgualAdministrador() {
-		final UserSpringSecurity userSpringSecurity = UserService.authenticated();
-		return userSpringSecurity.hasRole(Perfil.ADMINISTRADOR);
+	private static boolean perfilLogadoIgualAdministrador(UserDetailsCustom usuario) {
+		return usuario.hasRole(Perfil.ADMINISTRADOR);
 	}
 
 	private static boolean exists(final Cliente cliente) {
