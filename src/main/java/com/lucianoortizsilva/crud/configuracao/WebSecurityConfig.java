@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.seguranca;
+package com.lucianoortizsilva.crud.configuracao;
 
 import java.util.Arrays;
 
@@ -20,8 +20,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.lucianoortizsilva.crud.seguranca.autenticacao.JWTAuthenticationFilter;
-import com.lucianoortizsilva.crud.seguranca.autenticacao.JWTUtil;
+import com.lucianoortizsilva.crud.seguranca.autenticacao.AutenticacaoFilter;
+import com.lucianoortizsilva.crud.seguranca.autenticacao.TokenJWT;
 import com.lucianoortizsilva.crud.seguranca.autorizacao.JWTAuthorizationFilter;
 
 /**
@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private UserDetailsService userDetailsService;
 
 	@Autowired
-	private JWTUtil jwtUtil;
+	private TokenJWT tokenJWT;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -60,8 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			http.headers().frameOptions().disable();
 		}
 		
-		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), this.jwtUtil));
-		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), this.jwtUtil, this.userDetailsService));
+		http.addFilter(new AutenticacaoFilter(authenticationManager(), this.tokenJWT));
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), this.tokenJWT, this.userDetailsService));
 		http.cors().and().csrf().disable();
 		
 		http.authorizeRequests().antMatchers(ENDPOINT_DATABASE_H2).permitAll()

@@ -13,7 +13,7 @@ import com.lucianoortizsilva.crud.exception.dto.MensagemErroPadrao;
 import com.lucianoortizsilva.crud.exception.dto.ValidaErro;
 
 @ControllerAdvice
-public class InterceptaException {
+class TratamentoExcecao {
 
 	@ExceptionHandler(NaoEncontradoException.class)
 	public ResponseEntity<MensagemErroPadrao> objectNotFound(final NaoEncontradoException e, final HttpServletRequest request) {

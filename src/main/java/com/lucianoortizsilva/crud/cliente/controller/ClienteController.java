@@ -20,7 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.lucianoortizsilva.crud.cliente.dto.ClienteDTO;
 import com.lucianoortizsilva.crud.cliente.model.Cliente;
 import com.lucianoortizsilva.crud.cliente.service.ClienteService;
-import com.lucianoortizsilva.crud.seguranca.autenticacao.UserDetailsCustom;
+import com.lucianoortizsilva.crud.seguranca.UserDetailsCustom;
 
 import lombok.AllArgsConstructor;
 

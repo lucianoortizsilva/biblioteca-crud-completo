@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.seguranca.autenticacao;
+package com.lucianoortizsilva.crud.seguranca;
 
 import java.util.Collection;
 import java.util.Set;
