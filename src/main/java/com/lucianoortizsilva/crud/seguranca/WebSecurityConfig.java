@@ -40,16 +40,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Value("${spring.profiles.active}")
 	private String profileActive;
 	
-	private static final String[] ACESSO_PUBLIC = { 
-			"/h2-console/**", 
-			"/swagger-resources/**", 
-			"/swagger-ui.html",
-			"/v2/api-docs", 
-			"/webjars/**" 
-	};
+	private static final String ENDPOINT_DATABASE_H2 = "/h2-console/**";
+	private static final String ENDPOINT_CLIENTES = "/clientes";
+	private static final String ENDPOINT_LOGIN = "/login";
 	
-	private static final String[] ACESSO_PUBLIC_POST = { "/clientes", "/login" };
-
 	@Autowired
 	private Environment env;
 
@@ -64,13 +58,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// Para funcionar a page http://localhost:8080/h2-console:
 		if (Arrays.asList(this.env.getActiveProfiles()).contains("test")) {
 			http.headers().frameOptions().disable();
-		} 
-		http.cors().and().csrf().disable();
-		http.authorizeRequests().antMatchers(HttpMethod.POST, ACESSO_PUBLIC_POST).permitAll();
-		http.authorizeRequests().antMatchers(ACESSO_PUBLIC).permitAll().anyRequest().authenticated();
+		}
+		
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), this.jwtUtil));
 		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), this.jwtUtil, this.userDetailsService));
-		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.cors().and().csrf().disable();
+		
+		http.authorizeRequests().antMatchers(ENDPOINT_DATABASE_H2).permitAll()
+			.and()
+			.authorizeRequests().antMatchers(HttpMethod.POST, ENDPOINT_CLIENTES).permitAll()
+			.and()
+			.authorizeRequests().antMatchers(HttpMethod.POST, ENDPOINT_LOGIN).permitAll()
+			.and()
+			.authorizeRequests().antMatchers(HttpMethod.GET, ENDPOINT_CLIENTES).authenticated()
+			.and()
+			.authorizeRequests().antMatchers(HttpMethod.PUT, ENDPOINT_CLIENTES).authenticated()
+			.and()
+			.authorizeRequests().antMatchers(HttpMethod.DELETE, ENDPOINT_CLIENTES).authenticated()
+			.and()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 
 	@Bean

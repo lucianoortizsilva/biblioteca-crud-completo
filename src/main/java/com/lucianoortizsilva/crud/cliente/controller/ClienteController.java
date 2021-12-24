@@ -6,7 +6,6 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +31,8 @@ public class ClienteController {
 
 	private ClienteService clienteService;
 
+	
+	
 	@PostMapping
 	public ResponseEntity<Void> insert(@Valid @RequestBody final ClienteDTO dto) {
 		Cliente cliente = this.clienteService.fromDTO(dto);
@@ -40,23 +41,26 @@ public class ClienteController {
 		return ResponseEntity.created(uri).build();
 	}
 
+	
+	
 	@PutMapping(value = "/{id}")
-	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Void> update(@Valid @RequestBody final ClienteDTO dto, @PathVariable(value = "id") final Long id, @AuthenticationPrincipal final UserDetailsCustom usuario) {
 		dto.setId(id);
 		this.clienteService.update(dto, usuario);
 		return ResponseEntity.noContent().build();
 	}
 	
+	
+	
 	@DeleteMapping(value = "/{id}")
-	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Void> delete(@PathVariable(value = "id") final Long id, @AuthenticationPrincipal final UserDetailsCustom usuario) {
 		this.clienteService.delete(id, usuario);
 		return ResponseEntity.noContent().build();
 	}
 	
+	
+	
 	@GetMapping(value = "/{id}")
-	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Cliente> findById(@PathVariable(value = "id") final Long id, @AuthenticationPrincipal final UserDetailsCustom usuario) {
 		final Optional<Cliente> cliente = this.clienteService.findById(id, usuario);
 		if (cliente.isPresent()) {
