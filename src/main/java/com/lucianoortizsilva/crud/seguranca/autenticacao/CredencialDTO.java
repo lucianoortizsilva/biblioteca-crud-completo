@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.seguranca;
+package com.lucianoortizsilva.crud.seguranca.autenticacao;
 
 import java.io.Serializable;
 

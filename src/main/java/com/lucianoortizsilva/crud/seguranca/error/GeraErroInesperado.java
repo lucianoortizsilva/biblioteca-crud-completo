@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.seguranca.erro;
+package com.lucianoortizsilva.crud.seguranca.error;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,21 +11,21 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GeraErroNaoEncontrado {
+public class GeraErroInesperado {
 
 	private HttpServletResponse response;
 
 	@Getter
 	private String mensagemErroGerado;
 
-	public GeraErroNaoEncontrado(final HttpServletResponse response) {
+	public GeraErroInesperado(final HttpServletResponse response) {
 		this.response = response;
 	}
 
 	public void comMensagem(final String mensagem) {
 		try {
-			final int status = HttpStatus.NOT_FOUND.value();
-			final String error = "NOT FOUND";
+			final int status = HttpStatus.INTERNAL_SERVER_ERROR.value();
+			final String error = "INTERNAL SERVER ERROR";
 			final MensagemErroPadrao mensagemErroPadrao = MensagemErroPadrao
 					.builder()
 					.mensagem(mensagem)
@@ -36,7 +36,7 @@ public class GeraErroNaoEncontrado {
 			response.setStatus(status);
 			response.setContentType("application/json;charset=UTF-8");
 			response.getOutputStream().println(JsonUtil.convertToJson(mensagemErroPadrao));
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			log.error(e.getMessage(), e);
 		}
 	}

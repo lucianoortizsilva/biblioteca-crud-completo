@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +21,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.lucianoortizsilva.crud.cliente.dto.ClienteDTO;
 import com.lucianoortizsilva.crud.cliente.model.Cliente;
 import com.lucianoortizsilva.crud.cliente.service.ClienteService;
-import com.lucianoortizsilva.crud.seguranca.UserDetailsCustom;
+import com.lucianoortizsilva.crud.seguranca.autenticacao.UserDetailsCustom;
 
 import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
+@PreAuthorize("isAuthenticated()")
 @RequestMapping(value = "/clientes")
 public class ClienteController {
 
@@ -33,6 +35,7 @@ public class ClienteController {
 
 	
 	
+	@PreAuthorize("permitAll()")
 	@PostMapping
 	public ResponseEntity<Void> insert(@Valid @RequestBody final ClienteDTO dto) {
 		Cliente cliente = this.clienteService.fromDTO(dto);
@@ -51,7 +54,7 @@ public class ClienteController {
 	}
 	
 	
-	
+
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable(value = "id") final Long id, @AuthenticationPrincipal final UserDetailsCustom usuario) {
 		this.clienteService.delete(id, usuario);

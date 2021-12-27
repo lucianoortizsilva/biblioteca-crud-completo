@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.lucianoortizsilva.crud.cliente.model.Cliente;
 import com.lucianoortizsilva.crud.cliente.repository.ClienteRepository;
-import com.lucianoortizsilva.crud.seguranca.UserDetailsCustom;
 
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {

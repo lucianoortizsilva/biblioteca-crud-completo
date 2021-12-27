@@ -8,9 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -18,47 +16,43 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.lucianoortizsilva.crud.exception.dto.MensagemErroPadrao;
-import com.lucianoortizsilva.crud.seguranca.CredencialDTO;
-import com.lucianoortizsilva.crud.seguranca.UserDetailsCustom;
-import com.lucianoortizsilva.crud.seguranca.erro.GeraErroInesperado;
-import com.lucianoortizsilva.crud.seguranca.erro.GeraErroNaoEncontrado;
+import com.lucianoortizsilva.crud.seguranca.error.GeraErroBadRequest;
+import com.lucianoortizsilva.crud.seguranca.error.GeraErroNaoAutorizado;
+import com.lucianoortizsilva.crud.seguranca.token.TokenJWT;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class AutenticacaoFilter extends UsernamePasswordAuthenticationFilter {
+public class UsernamePasswordAuthentication extends UsernamePasswordAuthenticationFilter {
 
 	private AuthenticationManager authenticationManager;
 
 	private TokenJWT tokenJWT;
 
-	public AutenticacaoFilter(final AuthenticationManager authenticationManager, final TokenJWT tokenJWT) {
+	
+	
+	public UsernamePasswordAuthentication(final AuthenticationManager authenticationManager, final TokenJWT tokenJWT) {
 		setAuthenticationFailureHandler(new JWTAuthenticationFailureHandler());
 		this.authenticationManager = authenticationManager;
 		this.tokenJWT = tokenJWT;
 	}
-	
+
 	
 	
 	@Override
-	public Authentication attemptAuthentication(final HttpServletRequest req, final HttpServletResponse res) {
+	public Authentication attemptAuthentication(final HttpServletRequest req, final HttpServletResponse res) throws AuthenticationException {
+		CredencialDTO credencial;
 		try {
-			final CredencialDTO credencial = new ObjectMapper().readValue(req.getInputStream(), CredencialDTO.class);
+			credencial = new ObjectMapper().readValue(req.getInputStream(), CredencialDTO.class);
 			log.info("Solicitando token para usuario com e-mail: {}", credencial.getEmail());
 			final UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(credencial.getEmail(), credencial.getSenha(), new ArrayList<>());
 			return authenticationManager.authenticate(authToken);
-		} catch (final BadCredentialsException e) {
-			final GeraErroNaoEncontrado geraErroNaoEncontrado = new GeraErroNaoEncontrado(res);
-			geraErroNaoEncontrado.comMensagem("Usuario nao encontrado");
+		} catch (final IOException e) {
 			log.error(e.getMessage(), e);
-		} catch (final Exception e) {
-			final GeraErroInesperado geraErroInesperado = new GeraErroInesperado(res);
-			geraErroInesperado.comMensagem("Erro inesperado");
-			log.error(e.getMessage(), e);
+			final GeraErroBadRequest geraErroBadRequest = new GeraErroBadRequest(res);
+			geraErroBadRequest.comMensagem("Credencial invalida");
 		}
-		return authenticationManager.authenticate(null);
+		return null;
 	}
 
 	
@@ -77,19 +71,8 @@ public class AutenticacaoFilter extends UsernamePasswordAuthenticationFilter {
 	private class JWTAuthenticationFailureHandler implements AuthenticationFailureHandler {
 		@Override
 		public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-			final HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
-			final MensagemErroPadrao mensagemPadraoErro = MensagemErroPadrao
-					.builder()
-					.status(httpStatus.value())
-					.erro(httpStatus.getReasonPhrase())
-					.mensagem("Email ou senha invalidos")
-					.path("/login")
-					.build();
-			final Gson gson = new Gson();
-			response.setStatus(401);
-			response.setContentType("application/json");
-			response.getWriter().append(gson.toJson(mensagemPadraoErro));
-			log.error("{}. {}", mensagemPadraoErro.getErro(), mensagemPadraoErro.getMensagem());
+			final GeraErroNaoAutorizado erroNaoAutorizado = new GeraErroNaoAutorizado(response);
+			erroNaoAutorizado.comMensagem("Usuario e/ou senha invalidos");
 		}
 	}
 

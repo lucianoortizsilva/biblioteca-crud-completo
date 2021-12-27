@@ -18,5 +18,16 @@ public class JsonUtil {
 		}
 		return null;
 	}
+	
+	
+	public static Object convertToObject(final String json, final Class<?> object) {
+		try {
+			Gson gson = new Gson();
+			return gson.fromJson(json, object);
+		} catch (Exception e) {
+			log.error("[ERRO]", e);
+		}
+		return null;
+	}
 
 }

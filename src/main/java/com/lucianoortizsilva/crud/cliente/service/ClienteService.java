@@ -14,7 +14,7 @@ import com.lucianoortizsilva.crud.cliente.repository.ClienteRepository;
 import com.lucianoortizsilva.crud.exception.DadoDuplicadoException;
 import com.lucianoortizsilva.crud.exception.NaoAutorizadoException;
 import com.lucianoortizsilva.crud.exception.NaoEncontradoException;
-import com.lucianoortizsilva.crud.seguranca.UserDetailsCustom;
+import com.lucianoortizsilva.crud.seguranca.autenticacao.UserDetailsCustom;
 
 import lombok.AllArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.seguranca.erro;
+package com.lucianoortizsilva.crud.seguranca.error;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,28 +11,28 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GeraErroBadRequest {
+public class GeraErroRequisicaoInvalida {
 
 	private HttpServletResponse response;
 
 	@Getter
 	private String mensagemErroGerado;
 
-	public GeraErroBadRequest(final HttpServletResponse response) {
+	public GeraErroRequisicaoInvalida(final HttpServletResponse response) {
 		this.response = response;
 	}
 
-	protected void comMensagem(final String mensagem) {
+	public void comMensagem(final String message) {
 		try {
 			final int status = HttpStatus.BAD_REQUEST.value();
-			final String error = "BAD REQUEST";
+			final String error = "REQUISICAOO INVALIDA";
 			final MensagemErroPadrao mensagemErroPadrao = MensagemErroPadrao
 					.builder()
-					.mensagem(mensagem)
+					.mensagem(message)
 					.status(status)
 					.erro(error)
 					.build();
-			this.mensagemErroGerado = mensagem;
+			this.mensagemErroGerado = message;
 			response.setStatus(status);
 			response.setContentType("application/json;charset=UTF-8");
 			response.getOutputStream().println(JsonUtil.convertToJson(mensagemErroPadrao));

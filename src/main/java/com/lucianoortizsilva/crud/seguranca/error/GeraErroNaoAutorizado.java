@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.seguranca.erro;
+package com.lucianoortizsilva.crud.seguranca.error;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,32 +11,32 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GeraErroInesperado {
+public class GeraErroNaoAutorizado {
 
 	private HttpServletResponse response;
 
 	@Getter
 	private String mensagemErroGerado;
 
-	public GeraErroInesperado(final HttpServletResponse response) {
+	public GeraErroNaoAutorizado(final HttpServletResponse response) {
 		this.response = response;
 	}
 
-	public void comMensagem(final String mensagem) {
+	public void comMensagem(final String message) {
 		try {
-			final int status = HttpStatus.INTERNAL_SERVER_ERROR.value();
-			final String error = "INTERNAL SERVER ERROR";
+			final int status = HttpStatus.UNAUTHORIZED.value();
+			final String error = "NAO AUTORIZADO";
 			final MensagemErroPadrao mensagemErroPadrao = MensagemErroPadrao
 					.builder()
-					.mensagem(mensagem)
+					.mensagem(message)
 					.status(status)
 					.erro(error)
 					.build();
-			this.mensagemErroGerado = mensagem;
+			this.mensagemErroGerado = message;
 			response.setStatus(status);
 			response.setContentType("application/json;charset=UTF-8");
 			response.getOutputStream().println(JsonUtil.convertToJson(mensagemErroPadrao));
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			log.error(e.getMessage(), e);
 		}
 	}
