@@ -47,7 +47,7 @@ public class ClienteController {
 	
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Void> update(@Valid @RequestBody final ClienteDTO dto, @PathVariable(value = "id") final Long id, @AuthenticationPrincipal final UserDetailsCustom usuario) {
+	public ResponseEntity<Void> update(@RequestBody final ClienteDTO dto, @PathVariable(value = "id") final Long id, @AuthenticationPrincipal final UserDetailsCustom usuario) {
 		dto.setId(id);
 		this.clienteService.update(dto, usuario);
 		return ResponseEntity.noContent().build();

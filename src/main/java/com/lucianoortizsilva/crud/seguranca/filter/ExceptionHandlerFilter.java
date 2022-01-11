@@ -27,6 +27,11 @@ import com.lucianoortizsilva.crud.seguranca.token.TokenJWT;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 
+ * @see https://docs.spring.io/spring-security/site/docs/5.4.7/reference/html5/
+ *
+ */
 @Slf4j
 @Component
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
@@ -46,7 +51,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 				this.autenticar(request, response, filterChain);
 			} else {
 				final GeraErroInesperado geraErroInesperado = new GeraErroInesperado(response);
-				geraErroInesperado.comMensagem("OPS! Erro inesperado");
+				geraErroInesperado.comMensagemPadrao();
 			}
 		}
 	}
@@ -81,7 +86,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 	private static void negarAcessoRequisicaoInvalida(final HttpServletResponse response) {
 		SecurityContextHolder.getContext().setAuthentication(null);
 		GeraErroRequisicaoInvalida geraErroRequisicaoInvalida = new GeraErroRequisicaoInvalida(response);
-		geraErroRequisicaoInvalida.comMensagem("Authorization invalida");
+		geraErroRequisicaoInvalida.comMensagem("Authorization inválida");
 	}
 	
 	
@@ -89,7 +94,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 	private static void negarAcessoParaUsuarioNaoAutenticado(final HttpServletResponse response) {
 		SecurityContextHolder.getContext().setAuthentication(null);
 		GeraErroNaoAutorizado geraErroNaoAutorizado = new GeraErroNaoAutorizado(response);
-		geraErroNaoAutorizado.comMensagem("Usuario nao autenticado");
+		geraErroNaoAutorizado.comMensagem("Usuário nao autenticado");
 	}
 
 }

@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Optional;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +26,6 @@ import com.lucianoortizsilva.crud.cliente.util.ClienteStub;
 import com.lucianoortizsilva.crud.seguranca.autenticacao.UserDetailsCustom;
 import com.lucianoortizsilva.crud.seguranca.token.TokenJWT;
 
-@Disabled
 @WebMvcTest(controllers = ClienteController.class)
 @ExtendWith(value = SpringExtension.class)
 class ClienteControllerTest {

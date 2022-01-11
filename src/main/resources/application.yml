@@ -6,4 +6,4 @@ spring:
     open-in-view: false
 jwt:
   secret: sequenciadecaracteresparaassinartoken
-  expiration: 600000
+  expiration: 3600000
