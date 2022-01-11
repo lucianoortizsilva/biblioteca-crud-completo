@@ -20,15 +20,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jjwt.version>0.7.0</jjwt.version>
 		<gson.version>2.6.2</gson.version>
-		<sonar.organization>lucianoortizsilva</sonar.organization>
-		<sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
-		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-		<sonar.projectKey>springboot-crud</sonar.projectKey>
-		<sonar.projectName>springboot-crud</sonar.projectName>
-		<sonar.language>java</sonar.language>
-		<sonar.exclusions>pom.xml</sonar.exclusions>
-		<sonar.scm.provider>git</sonar.scm.provider>
-		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 
 	<dependencies>
@@ -101,47 +92,13 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<!-- PLUGIN PARA EXIBIR COBERTURA TESTES NO SONAR -->
-			<!-- https://www.jacoco.org/jacoco/trunk/doc/examples/build/pom.xml -->
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.7</version>
-				<executions>
-					<execution>
-						<id>jacoco-prepare</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>jacoco-report</id>
-						<phase>test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
-
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
-
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.sonarsource.scanner.maven</groupId>
-					<artifactId>sonar-maven-plugin</artifactId>
-					<version>3.9.1.2184</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-
 	</build>
 
 
