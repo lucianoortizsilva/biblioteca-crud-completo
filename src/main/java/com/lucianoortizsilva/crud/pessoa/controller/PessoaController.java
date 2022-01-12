@@ -7,7 +7,10 @@ import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +30,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
+@PreAuthorize("isAuthenticated()")
 @RequestMapping(value = "/pessoas")
 public class PessoaController {
 
@@ -35,6 +39,7 @@ public class PessoaController {
 	
 	
 	@PostMapping
+	@PreAuthorize("permitAll()")  
 	public ResponseEntity<Void> insert(@RequestBody @Valid final PessoaDTO dto) {
 		Pessoa pessoa = this.pessoaService.fromDTO(dto);
 		pessoa = this.pessoaService.insert(pessoa);
@@ -45,9 +50,11 @@ public class PessoaController {
 	
 	
 	@PutMapping(value = "/{id}")
-	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<Void> update(@RequestBody @Valid final PessoaDTO dto, @PathVariable(value = "id", required = true) final Long id, @AuthenticationPrincipal final UserDetailsCustom usuario) {
-		dto.setId(id);
+	public ResponseEntity<Void> update(@RequestBody @Valid final PessoaDTO dto, @PathVariable(value = "id", required = true) final Long id) {
+		SecurityContext context = SecurityContextHolder.getContext();
+	    Authentication authentication = context.getAuthentication();
+	    UserDetailsCustom usuario = (UserDetailsCustom) authentication.getPrincipal();
+	    dto.setId(id);
 		this.pessoaService.update(dto, usuario);
 		return ResponseEntity.noContent().build();
 	}
@@ -55,7 +62,6 @@ public class PessoaController {
 	
 
 	@DeleteMapping(value = "/{id}")
-	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Void> delete(@PathVariable(value = "id", required = true) final Long id, @AuthenticationPrincipal final UserDetailsCustom usuario) {
 		this.pessoaService.delete(id, usuario);
 		return ResponseEntity.noContent().build();
@@ -64,7 +70,6 @@ public class PessoaController {
 	
 	
 	@GetMapping(value = "/{id}")
-	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Pessoa> findById(@PathVariable(value = "id", required = true) final Long id, @AuthenticationPrincipal final UserDetailsCustom usuario) {
 		final Optional<Pessoa> pessoa = this.pessoaService.findById(id, usuario);
 		if (pessoa.isPresent()) {

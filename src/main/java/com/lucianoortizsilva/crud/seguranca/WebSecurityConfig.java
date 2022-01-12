@@ -28,7 +28,7 @@ import com.lucianoortizsilva.crud.seguranca.token.TokenJWT;
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true) // permite adicionar @PreAuthorize nos endpoints
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -41,11 +41,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		permitirVisualizarTelaBancoH2(http);
 		http.addFilter(new UsernamePasswordAuthentication(authenticationManager(), this.tokenJWT));
-		http.//
-				cors().//
-				and().csrf().disable()//
-				.authorizeRequests().antMatchers("/h2-console/**").permitAll()//
-				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//
+		http.cors().and().csrf().disable();
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 
 	private void permitirVisualizarTelaBancoH2(HttpSecurity http) throws Exception {

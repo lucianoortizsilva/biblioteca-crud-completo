@@ -11,8 +11,8 @@ import com.lucianoortizsilva.crud.exception.DadoDuplicadoException;
 import com.lucianoortizsilva.crud.exception.NaoAutorizadoException;
 import com.lucianoortizsilva.crud.exception.NaoEncontradoException;
 import com.lucianoortizsilva.crud.pessoa.dto.PessoaDTO;
-import com.lucianoortizsilva.crud.pessoa.model.Pessoa;
 import com.lucianoortizsilva.crud.pessoa.model.Perfil;
+import com.lucianoortizsilva.crud.pessoa.model.Pessoa;
 import com.lucianoortizsilva.crud.pessoa.repository.PessoaRepository;
 import com.lucianoortizsilva.crud.seguranca.autenticacao.UserDetailsCustom;
 
@@ -58,7 +58,7 @@ public class PessoaService {
 			throw new NaoEncontradoException("Pessoa não encontrada");
 		}
 	}
-	
+
 	public Pessoa fromDTO(final PessoaDTO dto) {
 		final Pessoa pessoa = new Pessoa();
 		pessoa.setId(dto.getId());
@@ -70,7 +70,7 @@ public class PessoaService {
 		pessoa.setSenha(this.bCryptPasswordEncoder.encode(dto.getSenha()));
 		return pessoa;
 	}
-	
+
 	public Optional<Pessoa> findById(final Long id, final UserDetailsCustom usuario) {
 		if (pessoaIdPesquisadoIgualPessoaLogada(id, usuario) || perfilLogadoIgualAdministrador(usuario)) {
 			return this.pessoaRepository.findById(id);
