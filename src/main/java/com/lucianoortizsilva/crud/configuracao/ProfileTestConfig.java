@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.lucianoortizsilva.crud.cliente.model.Cliente;
-import com.lucianoortizsilva.crud.cliente.repository.ClienteRepository;
+import com.lucianoortizsilva.crud.pessoa.model.Pessoa;
+import com.lucianoortizsilva.crud.pessoa.repository.PessoaRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,24 +21,26 @@ import lombok.extern.slf4j.Slf4j;
 public class ProfileTestConfig {
 
 	@Autowired
-	private ClienteRepository clienteRepository;
-
+	private PessoaRepository pessoaRepository;
+	
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+	private static final String SENHA = "12345";
+	
 	@Bean
 	public void inicializar() {
 		log.info("################ Profile=test inicializado ################");
-		final Cliente clientes[] = {
-				new Cliente("Luciano Ortiz", "84365299877", LocalDate.of(1984, 01, 31), "luciano@gmail.com", this.bCryptPasswordEncoder.encode("12345")),
-				new Cliente("Liziane Ortiz", "65464465454", LocalDate.of(1989, 06, 8), "liziane@gmail.com", this.bCryptPasswordEncoder.encode("12345")),
-				new Cliente("Mariana Ortiz", "12548664545", LocalDate.of(2011, 11, 28), "mariana@gmail.com", this.bCryptPasswordEncoder.encode("12345")),
-				new Cliente("Rafaela Ortiz", "46544557554", LocalDate.of(2011, 07, 28), "rafaela@gmail.com", this.bCryptPasswordEncoder.encode("12345")),
-				new Cliente("Mikaela Ortiz", "78895455624", LocalDate.of(1990, 05, 19), "mikaela@gmail.com", this.bCryptPasswordEncoder.encode("12345")), };
+		final Pessoa pessoas[] = {
+				new Pessoa("Luciano Ortiz", "84365299877", LocalDate.of(1984, 01, 31), "luciano@gmail.com", this.bCryptPasswordEncoder.encode(SENHA)),
+				new Pessoa("Liziane Ortiz", "65464465454", LocalDate.of(1989, 06, 8), "liziane@gmail.com", this.bCryptPasswordEncoder.encode(SENHA)),
+				new Pessoa("Mariana Ortiz", "12548664545", LocalDate.of(2011, 11, 28), "mariana@gmail.com", this.bCryptPasswordEncoder.encode(SENHA)),
+				new Pessoa("Rafaela Ortiz", "46544557554", LocalDate.of(2011, 07, 28), "rafaela@gmail.com", this.bCryptPasswordEncoder.encode(SENHA)),
+				new Pessoa("Mikaela Ortiz", "78895455624", LocalDate.of(1990, 05, 19), "mikaela@gmail.com", this.bCryptPasswordEncoder.encode(SENHA)), };
 
-		log.info("Populando a base com dados de [CLIENTE]");
-		final List<Cliente> clientesCadastrados = this.clienteRepository.saveAll(Arrays.asList(clientes));
-		clientesCadastrados.forEach(c -> log.info("Cliente: {}", c));
+		log.info("Populando a base com dados de [PESSOA]");
+		final List<Pessoa> pessoasCadastradas = this.pessoaRepository.saveAll(Arrays.asList(pessoas));
+		pessoasCadastradas.forEach(c -> log.info("Pessoa: {}", c));
 
 	}
 

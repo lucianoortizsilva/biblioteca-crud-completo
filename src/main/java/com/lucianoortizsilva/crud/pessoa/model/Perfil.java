@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.cliente.model;
+package com.lucianoortizsilva.crud.pessoa.model;
 
 import java.util.Objects;
 

@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.lucianoortizsilva.crud.cliente.model.Perfil;
+import com.lucianoortizsilva.crud.pessoa.model.Perfil;
 
 public class UserDetailsCustom implements UserDetails {
 

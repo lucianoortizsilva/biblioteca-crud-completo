@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -63,5 +64,18 @@ class TratamentoExcecao {
 				.build();
 		return ResponseEntity.status(status).body(mensagemErro);
 	}
-	
+
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<MensagemErroPadrao> dataIntegrity(final HttpMessageNotReadableException e, final HttpServletRequest request) {
+		final HttpStatus status =  HttpStatus.BAD_REQUEST;
+		final MensagemErroPadrao mensagemErro = MensagemErroPadrao
+				.builder()
+				.status(status.value())
+				.erro(status.getReasonPhrase())
+				.mensagem(e.getMessage())
+				.path(request.getRequestURI())
+				.build();
+		return ResponseEntity.status(status).body(mensagemErro);
+	}
+
 }

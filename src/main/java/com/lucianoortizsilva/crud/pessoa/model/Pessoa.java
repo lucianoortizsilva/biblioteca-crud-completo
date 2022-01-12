@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.cliente.model;
+package com.lucianoortizsilva.crud.pessoa.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -29,7 +29,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Cliente implements Serializable {
+public class Pessoa implements Serializable {
 
 	private static final long serialVersionUID = 4497503311326550516L;
 
@@ -58,7 +58,7 @@ public class Cliente implements Serializable {
 	@CollectionTable(name = "PERFIS")
 	private Set<Integer> perfis = new HashSet<>();
 
-	public Cliente(final String nome, final String cpf, final LocalDate nascimento, final String email, final String senha) {
+	public Pessoa(final String nome, final String cpf, final LocalDate nascimento, final String email, final String senha) {
 		super();
 		this.nome = nome;
 		this.cpf = cpf;
@@ -69,7 +69,7 @@ public class Cliente implements Serializable {
 	}
 
 	public Set<Perfil> getPerfis() {
-		return this.perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
+		return this.perfis.stream().map(Perfil::toEnum).collect(Collectors.toSet());
 	}
 	
 }

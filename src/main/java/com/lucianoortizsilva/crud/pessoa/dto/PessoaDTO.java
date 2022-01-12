@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.cliente.dto;
+package com.lucianoortizsilva.crud.pessoa.dto;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -15,7 +15,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ClienteDTO {
+public class PessoaDTO {
 
 	@JsonIgnore
 	private Long id;
