@@ -48,7 +48,7 @@ class PessoaControllerTest {
 	@DisplayName("DADO QUE estou logado, QUANDO pesquiso uma pessoa por id, Então ele deverá ser retornado com status 200")
 	void test_1() throws Exception {
 		final Optional<Pessoa> clienteEsperado = PessoaStub.getPessoa();
-		Mockito.when(this.pessoaService.findById(1L)).thenReturn(clienteEsperado);
+		Mockito.when(this.pessoaService.findById(1L)).thenReturn(clienteEsperado.get());
 		final MvcResult mvcResult = this.mockMvc.perform(get("/pessoas/1").contentType("application/json")).andExpect(status().isOk()).andReturn();
 		final String clienteRetornado = mvcResult.getResponse().getContentAsString();
 		assertThat(clienteRetornado).isEqualToIgnoringWhitespace(objectMapper.writeValueAsString(clienteEsperado));
@@ -58,7 +58,7 @@ class PessoaControllerTest {
 	@WithMockUser
 	@DisplayName("DADO QUE estou logado, QUANDO pesquiso uma pessoa por id, E o mesmo não existe, Então deverá ser retornado o status 404")
 	void test_2() throws Exception {
-		Mockito.when(this.pessoaService.findById(1L)).thenReturn(Optional.ofNullable(null));
+		Mockito.when(this.pessoaService.findById(1L)).thenReturn(null);
 		this.mockMvc.perform(get("/pessoas/1").contentType("application/json")).andExpect(status().isNotFound()).andReturn();
 	}
 	
