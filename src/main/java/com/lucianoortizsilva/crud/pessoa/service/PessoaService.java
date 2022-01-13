@@ -84,9 +84,14 @@ public class PessoaService {
 	
 	
 	@PreAuthorize("hasAuthority('ADMINISTRADOR')")
-	public Optional<Pessoa> findById(final Long id) {
+	public Pessoa findById(final Long id) {
 		if (pessoaIdPesquisadoIgualPessoaLogada(id, getCurrentUser()) || perfilLogadoIgualAdministrador(getCurrentUser())) {
-			return this.pessoaRepository.findById(id);
+			Optional<Pessoa> pessoa = pessoaRepository.findById(id);
+			if(pessoa.isPresent()) {
+				return pessoa.get();
+			}else {
+				throw new NaoEncontradoException("Pessoa não encontrada");
+			}
 		} else {
 			throw new NaoAutorizadoException("Não tem autorização para visualizar dados de outras pessoas.");
 		}

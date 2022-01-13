@@ -1,7 +1,6 @@
 package com.lucianoortizsilva.crud.pessoa.controller;
 
 import java.net.URI;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -29,8 +28,6 @@ public class PessoaController {
 
 	private PessoaService pessoaService;
 
-	
-	
 	@PostMapping
 	public ResponseEntity<Void> insert(@RequestBody @Valid final PessoaDTO dto) {
 		Pessoa pessoa = this.pessoaService.convertToEntity(dto);
@@ -39,33 +36,22 @@ public class PessoaController {
 		return ResponseEntity.created(uri).build();
 	}
 
-	
-	
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Void> update(@RequestBody @Valid final PessoaDTO dto, @PathVariable(value = "id", required = true) final Long id) {
-	    dto.setId(id);
+		dto.setId(id);
 		this.pessoaService.update(dto);
 		return ResponseEntity.noContent().build();
 	}
-	
-	
 
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable(value = "id", required = true) final Long id) {
 		this.pessoaService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
-	
-	
-	
+
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Pessoa> findById(@PathVariable(value = "id", required = true) final Long id) {
-		final Optional<Pessoa> pessoa = this.pessoaService.findById(id);
-		if (pessoa.isPresent()) {
-			return ResponseEntity.ok().body(pessoa.get());
-		} else {
-			return ResponseEntity.notFound().build();
-		}
+		return ResponseEntity.ok().body(this.pessoaService.findById(id));
 	}
 
 }

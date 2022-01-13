@@ -22,7 +22,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroInesperado;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroNaoAutorizado;
-import com.lucianoortizsilva.crud.seguranca.error.GeraErroNaoEncontrado;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroRequisicaoInvalida;
 import com.lucianoortizsilva.crud.seguranca.token.Payload;
 import com.lucianoortizsilva.crud.seguranca.token.TokenJWT;
@@ -70,10 +69,14 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 				chain.doFilter(request, response);
 			} catch (final UsernameNotFoundException e) {
 				log.error(e.getMessage(), e);
-				negarAcessoParaUsuarioNaoEncontrado(response);
+				SecurityContextHolder.clearContext();
+				GeraErroNaoAutorizado geraErroNaoAutorizado = new GeraErroNaoAutorizado(response);
+				geraErroNaoAutorizado.comMensagem("Authorization com usuário não encontrado");
 			} catch (final Exception e) {
 				log.error(e.getMessage(), e);
-				negarAcessoParaUsuarioNaoAutenticado(response);
+				SecurityContextHolder.clearContext();
+				GeraErroNaoAutorizado geraErroNaoAutorizado = new GeraErroNaoAutorizado(response);
+				geraErroNaoAutorizado.comMensagem("Authorization inválida");
 			}
 		}
 	}
@@ -92,16 +95,4 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 		geraErroRequisicaoInvalida.comMensagem("Authorization inválida");
 	}
 	
-	private static void negarAcessoParaUsuarioNaoAutenticado(final HttpServletResponse response) {
-		SecurityContextHolder.clearContext();
-		GeraErroNaoAutorizado geraErroNaoAutorizado = new GeraErroNaoAutorizado(response);
-		geraErroNaoAutorizado.comMensagem("Usuário nao autenticado");
-	}
-	
-	private static void negarAcessoParaUsuarioNaoEncontrado(final HttpServletResponse response) {
-		SecurityContextHolder.clearContext();
-		GeraErroNaoEncontrado geraErroNaoEncontrado = new GeraErroNaoEncontrado(response);
-		geraErroNaoEncontrado.comMensagem("Usuário não encontrado");
-	}
-
 }
