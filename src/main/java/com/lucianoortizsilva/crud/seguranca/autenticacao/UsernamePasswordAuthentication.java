@@ -63,7 +63,7 @@ public class UsernamePasswordAuthentication extends UsernamePasswordAuthenticati
 		final String token = tokenJWT.generateToken(username);
 		res.addHeader("Authorization", "Bearer " + token);
 		res.addHeader("access-control-expose-headers", "Authorization");
-		log.info("Bearer {}", token);
+		log.info("Authorization: Bearer {}", token);
 	}
 
 	

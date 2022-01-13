@@ -24,6 +24,7 @@ import com.lucianoortizsilva.crud.seguranca.error.GeraErroInesperado;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroNaoAutorizado;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroRequisicaoInvalida;
 import com.lucianoortizsilva.crud.seguranca.token.Payload;
+import com.lucianoortizsilva.crud.seguranca.token.TokenException;
 import com.lucianoortizsilva.crud.seguranca.token.TokenJWT;
 
 import lombok.extern.slf4j.Slf4j;
@@ -69,12 +70,14 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 				chain.doFilter(request, response);
 			} catch (final UsernameNotFoundException e) {
 				log.error(e.getMessage(), e);
-				SecurityContextHolder.clearContext();
 				GeraErroNaoAutorizado geraErroNaoAutorizado = new GeraErroNaoAutorizado(response);
 				geraErroNaoAutorizado.comMensagem("Authorization com usuário não encontrado");
+			} catch (final TokenException e) {
+				log.error(e.getMessage(), e);
+				GeraErroNaoAutorizado geraErroNaoAutorizado = new GeraErroNaoAutorizado(response);
+				geraErroNaoAutorizado.comMensagem(e.getMessage());
 			} catch (final Exception e) {
 				log.error(e.getMessage(), e);
-				SecurityContextHolder.clearContext();
 				GeraErroNaoAutorizado geraErroNaoAutorizado = new GeraErroNaoAutorizado(response);
 				geraErroNaoAutorizado.comMensagem("Authorization inválida");
 			}

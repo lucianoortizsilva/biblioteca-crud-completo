@@ -8,9 +8,12 @@ import org.springframework.stereotype.Component;
 import com.lucianoortizsilva.crud.util.JsonUtil;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class TokenJWT {
 
@@ -23,9 +26,11 @@ public class TokenJWT {
 	
 	
 	public String generateToken(final String username) {
+		final Date dhExpiration = new Date(System.currentTimeMillis() + expiration);
+		log.info("Date hora expiração: {}", dhExpiration);
 		return Jwts.builder()
 				.setSubject(username)
-				.setExpiration(new Date(System.currentTimeMillis() + expiration))
+				.setExpiration(dhExpiration)
 				.signWith(SignatureAlgorithm.HS512, secret.getBytes())
 				.compact();
 	}
@@ -45,6 +50,8 @@ public class TokenJWT {
 			final Claims claims = Jwts.parser().setSigningKey(this.secret.getBytes()).parseClaimsJws(fullToken).getBody();
 			final String json = JsonUtil.convertToJson(claims);
 			return (Payload) JsonUtil.convertToObject(json, Payload.class);
+		} catch (final ExpiredJwtException e) {
+			throw new TokenException("Token Expirado");
 		} catch (final Exception e) {
 			throw new TokenException("Erro ao decodificar o payload");
 		}
