@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import com.lucianoortizsilva.crud.pessoa.model.Pessoa;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class PessoaStub {
 
 	public static Optional<Pessoa> getPessoa() {

@@ -16,11 +16,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroInesperado;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroNaoAutorizado;
+import com.lucianoortizsilva.crud.seguranca.error.GeraErroNaoEncontrado;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroRequisicaoInvalida;
 import com.lucianoortizsilva.crud.seguranca.token.Payload;
 import com.lucianoortizsilva.crud.seguranca.token.TokenJWT;
@@ -66,6 +68,9 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 				final UsernamePasswordAuthenticationToken usuarioAutenticado = getUsernamePasswordAuthenticationToken(token);
 				SecurityContextHolder.getContext().setAuthentication(usuarioAutenticado);
 				chain.doFilter(request, response);
+			} catch (final UsernameNotFoundException e) {
+				log.error(e.getMessage(), e);
+				negarAcessoParaUsuarioNaoEncontrado(response);
 			} catch (final Exception e) {
 				log.error(e.getMessage(), e);
 				negarAcessoParaUsuarioNaoAutenticado(response);
@@ -81,20 +86,22 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 		return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 	}
 	
-	
-	
 	private static void negarAcessoRequisicaoInvalida(final HttpServletResponse response) {
-		SecurityContextHolder.getContext().setAuthentication(null);
+		SecurityContextHolder.clearContext();
 		GeraErroRequisicaoInvalida geraErroRequisicaoInvalida = new GeraErroRequisicaoInvalida(response);
 		geraErroRequisicaoInvalida.comMensagem("Authorization inválida");
 	}
 	
-	
-	
 	private static void negarAcessoParaUsuarioNaoAutenticado(final HttpServletResponse response) {
-		SecurityContextHolder.getContext().setAuthentication(null);
+		SecurityContextHolder.clearContext();
 		GeraErroNaoAutorizado geraErroNaoAutorizado = new GeraErroNaoAutorizado(response);
 		geraErroNaoAutorizado.comMensagem("Usuário nao autenticado");
+	}
+	
+	private static void negarAcessoParaUsuarioNaoEncontrado(final HttpServletResponse response) {
+		SecurityContextHolder.clearContext();
+		GeraErroNaoEncontrado geraErroNaoEncontrado = new GeraErroNaoEncontrado(response);
+		geraErroNaoEncontrado.comMensagem("Usuário não encontrado");
 	}
 
 }

@@ -6,11 +6,6 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,13 +19,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.lucianoortizsilva.crud.pessoa.dto.PessoaDTO;
 import com.lucianoortizsilva.crud.pessoa.model.Pessoa;
 import com.lucianoortizsilva.crud.pessoa.service.PessoaService;
-import com.lucianoortizsilva.crud.seguranca.autenticacao.UserDetailsCustom;
 
 import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-@PreAuthorize("isAuthenticated()")
 @RequestMapping(value = "/pessoas")
 public class PessoaController {
 
@@ -39,9 +32,8 @@ public class PessoaController {
 	
 	
 	@PostMapping
-	@PreAuthorize("permitAll()")  
 	public ResponseEntity<Void> insert(@RequestBody @Valid final PessoaDTO dto) {
-		Pessoa pessoa = this.pessoaService.fromDTO(dto);
+		Pessoa pessoa = this.pessoaService.convertToEntity(dto);
 		pessoa = this.pessoaService.insert(pessoa);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(pessoa.getId()).toUri();
 		return ResponseEntity.created(uri).build();
@@ -51,27 +43,24 @@ public class PessoaController {
 	
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Void> update(@RequestBody @Valid final PessoaDTO dto, @PathVariable(value = "id", required = true) final Long id) {
-		SecurityContext context = SecurityContextHolder.getContext();
-	    Authentication authentication = context.getAuthentication();
-	    UserDetailsCustom usuario = (UserDetailsCustom) authentication.getPrincipal();
 	    dto.setId(id);
-		this.pessoaService.update(dto, usuario);
+		this.pessoaService.update(dto);
 		return ResponseEntity.noContent().build();
 	}
 	
 	
 
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable(value = "id", required = true) final Long id, @AuthenticationPrincipal final UserDetailsCustom usuario) {
-		this.pessoaService.delete(id, usuario);
+	public ResponseEntity<Void> delete(@PathVariable(value = "id", required = true) final Long id) {
+		this.pessoaService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 	
 	
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Pessoa> findById(@PathVariable(value = "id", required = true) final Long id, @AuthenticationPrincipal final UserDetailsCustom usuario) {
-		final Optional<Pessoa> pessoa = this.pessoaService.findById(id, usuario);
+	public ResponseEntity<Pessoa> findById(@PathVariable(value = "id", required = true) final Long id) {
+		final Optional<Pessoa> pessoa = this.pessoaService.findById(id);
 		if (pessoa.isPresent()) {
 			return ResponseEntity.ok().body(pessoa.get());
 		} else {
