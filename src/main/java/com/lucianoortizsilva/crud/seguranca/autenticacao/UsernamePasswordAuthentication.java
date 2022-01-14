@@ -16,10 +16,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroBadRequest;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroNaoAutorizado;
 import com.lucianoortizsilva.crud.seguranca.token.TokenJwt;
+import com.lucianoortizsilva.crud.util.JsonUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,11 +30,13 @@ public class UsernamePasswordAuthentication extends UsernamePasswordAuthenticati
 
 	private TokenJwt tokenJwt;
 
+	private UserDetailServiceImpl userDetailServiceImpl;
 	
 	
-	public UsernamePasswordAuthentication(final AuthenticationManager authenticationManager, final TokenJwt tokenJwt) {
+	public UsernamePasswordAuthentication(final AuthenticationManager authenticationManager, final UserDetailServiceImpl userDetailServiceImpl, final TokenJwt tokenJwt) {
 		setAuthenticationFailureHandler(new JWTAuthenticationFailureHandler());
 		this.authenticationManager = authenticationManager;
+		this.userDetailServiceImpl = userDetailServiceImpl;
 		this.tokenJwt = tokenJwt;
 	}
 
@@ -42,16 +44,15 @@ public class UsernamePasswordAuthentication extends UsernamePasswordAuthenticati
 	
 	@Override
 	public Authentication attemptAuthentication(final HttpServletRequest req, final HttpServletResponse res) throws AuthenticationException {
-		CredencialDTO credencial;
 		try {
-			credencial = new ObjectMapper().readValue(req.getInputStream(), CredencialDTO.class);
-			log.info("Solicitando tokenJwt para usuario com e-mail: {}", credencial.getEmail());
-			final UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(credencial.getEmail(), credencial.getSenha(), new ArrayList<>());
-			return authenticationManager.authenticate(authToken);
-		} catch (final IOException e) {
+			final CredencialDTO credencial = (CredencialDTO) JsonUtil.convertToObject(req.getInputStream(), CredencialDTO.class);
+			log.info("Solicitando token para usuario com e-mail: {}", credencial.getEmail());
+			final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = userDetailServiceImpl.getUsernamePasswordAuthenticationToken(credencial.getEmail(), credencial.getSenha(), new ArrayList<>());
+			return authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+		} catch (final Exception e) {
 			log.error(e.getMessage(), e);
 			final GeraErroBadRequest geraErroBadRequest = new GeraErroBadRequest(res);
-			geraErroBadRequest.comMensagem("Credencial inválida");
+			geraErroBadRequest.comMensagem(e.getMessage());
 		}
 		return null;
 	}
@@ -59,8 +60,8 @@ public class UsernamePasswordAuthentication extends UsernamePasswordAuthenticati
 	
 	
 	@Override
-	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication auth) throws IOException, ServletException {
-		final String username = ((UserDetailsCustom) auth.getPrincipal()).getUsername();
+	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
+		final String username = ((UserDetailsCustom) authentication.getPrincipal()).getUsername();
 		final String token = this.tokenJwt.generateToken(username);
 		response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 		response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.AUTHORIZATION);

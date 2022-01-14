@@ -1,9 +1,11 @@
 package com.lucianoortizsilva.crud.seguranca.autenticacao;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,8 +30,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
 		final Optional<Pessoa> pessoa = pessoaRepository.findByEmail(email);
 		if (pessoa.isEmpty()) {
 			throw new UsernameNotFoundException(email);
+		} else {
+			return new UserDetailsCustom(pessoa.get().getId(), pessoa.get().getEmail(), pessoa.get().getSenha(), pessoa.get().getPerfis());
 		}
-		return new UserDetailsCustom(pessoa.get().getId(), pessoa.get().getEmail(), pessoa.get().getSenha(), pessoa.get().getPerfis());
 	}
 	
 	
@@ -38,6 +41,12 @@ public class UserDetailServiceImpl implements UserDetailsService {
 		final Payload payload = this.tokenJwt.getPayload(authorization);
 		final UserDetails userDetails = this.loadUserByUsername(payload.getLogin());
 		return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+	}
+	
+	
+	
+	public UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(final String email, final String senha, final List<SimpleGrantedAuthority> permissoes) {
+		return new UsernamePasswordAuthenticationToken(email, senha, permissoes);
 	}
 
 }
