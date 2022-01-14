@@ -24,9 +24,11 @@ import com.lucianoortizsilva.crud.seguranca.error.GeraErroInesperado;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroNaoAutorizado;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroRequisicaoInvalida;
 import com.lucianoortizsilva.crud.seguranca.token.Payload;
-import com.lucianoortizsilva.crud.seguranca.token.TokenException;
-import com.lucianoortizsilva.crud.seguranca.token.TokenJWT;
+import com.lucianoortizsilva.crud.seguranca.token.TokenJwt;
+import com.lucianoortizsilva.crud.seguranca.token.TokenJwtException;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -39,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
 	@Autowired
-	private TokenJWT tokenJWT;
+	private TokenJwt tokenJwt;
 
 	@Autowired
 	private UserDetailsService userDetailsService;
@@ -51,7 +53,13 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 		} catch (final Exception e) {
 			if (e.getCause() instanceof AccessDeniedException) {
 				this.autenticar(request, response, filterChain);
+			} else if (e.getCause() instanceof SignatureException) {
+				this.autenticar(request, response, filterChain);
+			} else if(e.getCause() instanceof ExpiredJwtException) {
+				final GeraErroNaoAutorizado geraErroNaoAutorizado = new GeraErroNaoAutorizado(response);
+				geraErroNaoAutorizado.comMensagem("Token Expirado");
 			} else {
+				log.error(e.getMessage(), e);
 				final GeraErroInesperado geraErroInesperado = new GeraErroInesperado(response);
 				geraErroInesperado.comMensagemPadrao();
 			}
@@ -60,19 +68,19 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
 	private void autenticar(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain) {
 		final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+		
 		if (isEmpty(authorization) || !authorization.startsWith("Bearer")) {
 			negarAcessoRequisicaoInvalida(response);
 		} else {
 			try {
-				final String token = authorization.substring("Bearer".length()).trim();
-				final UsernamePasswordAuthenticationToken usuarioAutenticado = getUsernamePasswordAuthenticationToken(token);
+				final UsernamePasswordAuthenticationToken usuarioAutenticado = getUsernamePasswordAuthenticationToken(authorization);
 				SecurityContextHolder.getContext().setAuthentication(usuarioAutenticado);
 				chain.doFilter(request, response);
 			} catch (final UsernameNotFoundException e) {
 				log.error(e.getMessage(), e);
 				GeraErroNaoAutorizado geraErroNaoAutorizado = new GeraErroNaoAutorizado(response);
 				geraErroNaoAutorizado.comMensagem("Authorization com usuário não encontrado");
-			} catch (final TokenException e) {
+			} catch (final TokenJwtException e) {
 				log.error(e.getMessage(), e);
 				GeraErroNaoAutorizado geraErroNaoAutorizado = new GeraErroNaoAutorizado(response);
 				geraErroNaoAutorizado.comMensagem(e.getMessage());
@@ -84,18 +92,16 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 		}
 	}
 
-	
-	
-	private UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(final String token) {
-		final Payload payload = this.tokenJWT.getPayload(token);
+	private UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(final String authorization) {
+		final Payload payload = this.tokenJwt.getPayload(authorization);
 		final UserDetails userDetails = this.userDetailsService.loadUserByUsername(payload.getLogin());
 		return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 	}
-	
+
 	private static void negarAcessoRequisicaoInvalida(final HttpServletResponse response) {
 		SecurityContextHolder.clearContext();
 		GeraErroRequisicaoInvalida geraErroRequisicaoInvalida = new GeraErroRequisicaoInvalida(response);
 		geraErroRequisicaoInvalida.comMensagem("Authorization inválida");
 	}
-	
+
 }

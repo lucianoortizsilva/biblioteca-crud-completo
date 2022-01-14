@@ -85,7 +85,8 @@ public class PessoaService {
 	
 	@PreAuthorize("hasAuthority('ADMINISTRADOR')")
 	public Pessoa findById(final Long id) {
-		if (pessoaIdPesquisadoIgualPessoaLogada(id, getCurrentUser()) || perfilLogadoIgualAdministrador(getCurrentUser())) {
+		UserDetailsCustom usuario =  getCurrentUser();
+		if (pessoaIdPesquisadoIgualPessoaLogada(id, usuario) || perfilLogadoIgualAdministrador(usuario)) {
 			Optional<Pessoa> pessoa = pessoaRepository.findById(id);
 			if(pessoa.isPresent()) {
 				return pessoa.get();

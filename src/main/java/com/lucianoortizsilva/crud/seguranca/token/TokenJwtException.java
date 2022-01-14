@@ -1,10 +1,10 @@
 package com.lucianoortizsilva.crud.seguranca.token;
 
-public class TokenException extends RuntimeException {
+public class TokenJwtException extends RuntimeException {
 
 	static final long serialVersionUID = -518567546596988373L;
 
-	public TokenException(final String message) {
+	public TokenJwtException(final String message) {
 		super(message);
 	}
 
