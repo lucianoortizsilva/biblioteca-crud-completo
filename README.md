@@ -31,7 +31,7 @@ No client de sua preferência, estou utilizando o [insomnia](https://insomnia.re
 > **POST** **`http://localhost:8080/login`**
 ```json
 {
-	"email" : "admin@gmail.com",
+	"email" : "luciano@email.com",
 	"senha" : "12345"
 }
 ```
