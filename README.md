@@ -20,11 +20,8 @@ No client de sua preferência, estou utilizando o [insomnia](https://insomnia.re
 ```json
 {
 	"nome" : "Luciano Ortiz",
-	"email" : "admin@gmail.com",
-	"senha" : "12345",
 	"cpf" : "12345678987",
-	"nascimento" : "1984-01-31",
-	"perfis" : [1] /*admin*/
+	"nascimento" : "1984-01-31"
 }
 ```
 
@@ -51,11 +48,8 @@ No client de sua preferência, estou utilizando o [insomnia](https://insomnia.re
 ```json
 {
 	"nome" : "Luciano Ortiz - teste",
-	"email" : "admin@gmail.com",
-	"senha" : "12345",
 	"cpf" : "12345678987",
-	"nascimento" : "1984-01-31",
-	"perfis" : [1] /*admin*/
+	"nascimento" : "1984-01-31"
 }
 ```
 
