@@ -5,7 +5,7 @@
 - JWT
 
 ### O que é ?
-CRUD completo de "Pessoas", utilizando JWT, e testes de integração com @WebMvcTest
+CRUD completo de "Clientes", utilizando JWT, e testes de integração com @WebMvcTest
 
 ### Como rodar ?
 - Execute **`mvn clean package -Pdev spring-boot:run`**
