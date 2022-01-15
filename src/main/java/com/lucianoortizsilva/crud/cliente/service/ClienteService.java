@@ -1,7 +1,5 @@
 package com.lucianoortizsilva.crud.cliente.service;
 
-import static com.lucianoortizsilva.crud.seguranca.util.AuthenticationUtil.getCurrentUser;
-
 import java.util.Objects;
 import java.util.Optional;
 
@@ -13,12 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.lucianoortizsilva.crud.cliente.dto.ClienteDTO;
 import com.lucianoortizsilva.crud.cliente.model.Cliente;
-import com.lucianoortizsilva.crud.cliente.model.Perfil;
 import com.lucianoortizsilva.crud.cliente.repository.ClienteRepository;
 import com.lucianoortizsilva.crud.exception.DadoDuplicadoException;
-import com.lucianoortizsilva.crud.exception.NaoAutorizadoException;
 import com.lucianoortizsilva.crud.exception.NaoEncontradoException;
-import com.lucianoortizsilva.crud.seguranca.autenticacao.User;
 
 import lombok.AllArgsConstructor;
 
@@ -40,36 +35,23 @@ public class ClienteService {
 			return this.clienteRepository.save(entity);
 		}
 	}
-	
-	
-	
-	
+
 	@Transactional
-	@PreAuthorize("#dto.id != null and hasAuthority('ADMINISTRADOR')")
+	@PreAuthorize("#dto.id != null and (hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENTE'))")
 	public void update(@P("dto") final ClienteDTO dto) {
 		Cliente cliente = getById(dto.getId());
-
-		if (!exists(cliente))
+		if (exists(cliente)) {
+			cliente = this.convertToEntity(dto);
+			this.clienteRepository.save(cliente);
+		} else {
 			throw new NaoEncontradoException("Usuario Não Encontrada");
-
-		if (!pessoaLogadaIgualPessoaInformadoParaEditar(dto, getCurrentUser()))
-			throw new NaoAutorizadoException("Não é possível editar dados de outra pessoa!");
-
-		cliente = this.convertToEntity(dto);
-
-		this.clienteRepository.save(cliente);
+		}
 	}
 
-	
-	
 	@Transactional
-	@PreAuthorize("hasAuthority('ADMINISTRADOR')")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public void delete(final Long id) {
-		if (!perfilLogadoIgualAdministrador(getCurrentUser()))
-			throw new NaoAutorizadoException("Não tem autorização para deletar pessoas.");
-
 		final Cliente cliente = this.getById(id);
-
 		if (exists(cliente)) {
 			this.clienteRepository.deleteById(id);
 		} else {
@@ -77,25 +59,16 @@ public class ClienteService {
 		}
 	}
 
-	
-	
-	@PreAuthorize("hasAuthority('ADMINISTRADOR')")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENTE') or hasAuthority('ROLE_SUPORTE')")
 	public Cliente findById(final Long id) {
-		User usuario = getCurrentUser();
-		if (pessoaIdPesquisadoIgualPessoaLogada(id, usuario) || perfilLogadoIgualAdministrador(usuario)) {
-			Optional<Cliente> cliente = clienteRepository.findById(id);
-			if (cliente.isPresent()) {
-				return cliente.get();
-			} else {
-				throw new NaoEncontradoException("Cliente não encontrado");
-			}
+		Optional<Cliente> cliente = clienteRepository.findById(id);
+		if (cliente.isPresent()) {
+			return cliente.get();
 		} else {
-			throw new NaoAutorizadoException("Não tem autorização para visualizar dados de outros clientes.");
+			throw new NaoEncontradoException("Cliente não encontrado");
 		}
 	}
 
-	
-	
 	@PreAuthorize("permitAll")
 	public Cliente convertToEntity(final ClienteDTO dto) {
 		return modelMapper.map(dto, Cliente.class);
@@ -108,18 +81,6 @@ public class ClienteService {
 			cliente = optional.get();
 		}
 		return cliente;
-	}
-
-	private static boolean pessoaLogadaIgualPessoaInformadoParaEditar(final ClienteDTO dto, User usuario) {
-		return usuario.getId().equals(dto.getId());
-	}
-
-	private static boolean pessoaIdPesquisadoIgualPessoaLogada(final Long id, final User usuario) {
-		return usuario.getId().equals(id);
-	}
-
-	private static boolean perfilLogadoIgualAdministrador(User usuario) {
-		return usuario.hasRole(Perfil.ADMINISTRADOR);
 	}
 
 	private static boolean exists(final Cliente cliente) {

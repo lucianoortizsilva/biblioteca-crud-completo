@@ -1,22 +1,23 @@
-package com.lucianoortizsilva.crud.seguranca.autenticacao;
+package com.lucianoortizsilva.crud.seguranca.autenticacao.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.lucianoortizsilva.crud.cliente.model.Perfil;
+import com.lucianoortizsilva.crud.seguranca.autenticacao.type.RoleEnum;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -25,7 +26,6 @@ import lombok.ToString;
 @Entity
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 public class User implements UserDetails {
 
 	private static final long serialVersionUID = -804917945275782212L;
@@ -34,21 +34,41 @@ public class User implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(unique = true)
+	@Column(name = "username", unique = true, nullable = false)
 	private String username;
 
+	@Column(name = "password", nullable = false)
 	private String password;
 
-	@CreatedBy
-	private String createdBy;
+	@Column(name = "enabled", nullable = false)
+	private Boolean enabled;
 
-	public boolean hasRole(Perfil perfil) {
-		return this.getAuthorities().contains(new SimpleGrantedAuthority(perfil.getDescricao()));
+	@ManyToMany(fetch = FetchType.EAGER)
+	private List<Role> roles;
+
+	@Transient
+	private Collection<? extends GrantedAuthority> authorities;
+
+	private boolean accountNonExpired = true;
+
+	private boolean accountNonLocked = true;
+
+	private boolean credentialsNonExpired = true;
+
+	public User(final String username, final String password, final Boolean enabled, final List<Role> roles) {
+		this.username = username;
+		this.password = password;
+		this.enabled = enabled;
+		this.roles = roles;
+	}
+
+	public boolean hasRole(final RoleEnum roleEnum) {
+		return this.getAuthorities().contains(new SimpleGrantedAuthority(roleEnum.name()));
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return new ArrayList<>();
+		return authorities;
 	}
 
 	@Override
@@ -63,22 +83,22 @@ public class User implements UserDetails {
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return true;
+		return accountNonExpired;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return true;
+		return accountNonLocked;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return true;
+		return credentialsNonExpired;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return enabled;
 	}
 
 }

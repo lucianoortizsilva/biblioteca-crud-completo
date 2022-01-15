@@ -4,7 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.lucianoortizsilva.crud.seguranca.autenticacao.User;
+import com.lucianoortizsilva.crud.seguranca.autenticacao.model.User;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;

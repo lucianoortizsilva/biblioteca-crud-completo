@@ -39,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
 	@Autowired
-	private UserService userDetailsServiceImpl;
+	private UserService userService;
 
 	@Override
 	public void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
@@ -58,7 +58,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 				final GeraErroInesperado geraErroInesperado = new GeraErroInesperado(response);
 				geraErroInesperado.comMensagemPadrao();
 			}
-		}
+		} 
 	}
 
 	private void autenticar(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain) {
@@ -68,7 +68,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 				GeraErroRequisicaoInvalida geraErroRequisicaoInvalida = new GeraErroRequisicaoInvalida(response);
 				geraErroRequisicaoInvalida.comMensagem("Authorization inválida");
 			} else {
-				final UsernamePasswordAuthenticationToken usuarioAutenticado = this.userDetailsServiceImpl.getUsernamePasswordAuthenticationToken(authorization);
+				final UsernamePasswordAuthenticationToken usuarioAutenticado = this.userService.getUsernamePasswordAuthenticationToken(authorization);
 				SecurityContextHolder.getContext().setAuthentication(usuarioAutenticado);
 				chain.doFilter(request, response);
 			}
@@ -84,13 +84,13 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 			if (e.getCause() instanceof AccessDeniedException) {
 				log.error(e.getCause().getMessage(), e.getCause());
 				GeraErroSemPermissao geraErroSemPermissao = new GeraErroSemPermissao(response);
-				geraErroSemPermissao.comMensagem("Usuário sem permissão de acesso");
+				geraErroSemPermissao.comMensagem("Usuário sem permissão");
 			} else {
 				log.error(e.getMessage(), e);
 				GeraErroNaoAutorizado geraErroNaoAutorizado = new GeraErroNaoAutorizado(response);
 				geraErroNaoAutorizado.comMensagem("Authorization inválida");
 			}
-		}
+		} 
 	}
 
 }

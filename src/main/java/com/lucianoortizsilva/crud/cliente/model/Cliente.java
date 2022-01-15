@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,6 @@ import lombok.ToString;
 @Getter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Cliente implements Serializable {
 
@@ -40,6 +38,12 @@ public class Cliente implements Serializable {
 	private String cpf;
 
 	@Column(nullable = false)
-	private LocalDate nascimento;
+	private LocalDate dtNascimento;
+
+	public Cliente(final String nome, final String cpf, final LocalDate nascimento) {
+		this.nome = nome;
+		this.cpf = cpf;
+		this.dtNascimento = nascimento;
+	}
 
 }

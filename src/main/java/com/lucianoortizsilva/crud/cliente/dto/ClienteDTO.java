@@ -30,6 +30,6 @@ public class ClienteDTO {
 	private String cpf;
 
 	@NotNull
-	private LocalDate nascimento;
+	private LocalDate dtNascimento;
 
 }
