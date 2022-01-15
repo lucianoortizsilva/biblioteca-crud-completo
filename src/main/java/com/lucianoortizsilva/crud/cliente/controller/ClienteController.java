@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.pessoa.controller;
+package com.lucianoortizsilva.crud.cliente.controller;
 
 import java.net.URI;
 
@@ -15,43 +15,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.lucianoortizsilva.crud.pessoa.dto.PessoaDTO;
-import com.lucianoortizsilva.crud.pessoa.model.Pessoa;
-import com.lucianoortizsilva.crud.pessoa.service.PessoaService;
+import com.lucianoortizsilva.crud.cliente.dto.ClienteDTO;
+import com.lucianoortizsilva.crud.cliente.model.Cliente;
+import com.lucianoortizsilva.crud.cliente.service.ClienteService;
 
 import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(value = "/pessoas")
-public class PessoaController {
+@RequestMapping(value = "/clientes")
+public class ClienteController {
 
-	private PessoaService pessoaService;
+	private ClienteService clienteService;
 
 	@PostMapping
-	public ResponseEntity<Void> insert(@RequestBody @Valid final PessoaDTO dto) {
-		Pessoa pessoa = this.pessoaService.convertToEntity(dto);
-		pessoa = this.pessoaService.insert(pessoa);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(pessoa.getId()).toUri();
+	public ResponseEntity<Void> insert(@RequestBody @Valid final ClienteDTO dto) {
+		Cliente cliente = this.clienteService.convertToEntity(dto);
+		cliente = this.clienteService.insert(cliente);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(cliente.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Void> update(@RequestBody @Valid final PessoaDTO dto, @PathVariable(value = "id", required = true) final Long id) {
+	public ResponseEntity<Void> update(@RequestBody @Valid final ClienteDTO dto, @PathVariable(value = "id", required = true) final Long id) {
 		dto.setId(id);
-		this.pessoaService.update(dto);
+		this.clienteService.update(dto);
 		return ResponseEntity.noContent().build();
 	}
 
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable(value = "id", required = true) final Long id) {
-		this.pessoaService.delete(id);
+		this.clienteService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Pessoa> findById(@PathVariable(value = "id", required = true) final Long id) {
-		return ResponseEntity.ok().body(this.pessoaService.findById(id));
+	public ResponseEntity<Cliente> findById(@PathVariable(value = "id", required = true) final Long id) {
+		return ResponseEntity.ok().body(this.clienteService.findById(id));
 	}
 
 }

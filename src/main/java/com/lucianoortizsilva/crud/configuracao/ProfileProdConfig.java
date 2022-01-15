@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
-@Profile(value = "prod")
+@Profile(value = "dev")
 public class ProfileProdConfig {
 
 	@Bean

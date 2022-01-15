@@ -18,10 +18,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.lucianoortizsilva.crud.seguranca.autenticacao.UserDetailServiceImpl;
+import com.lucianoortizsilva.crud.seguranca.autenticacao.UserService;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroInesperado;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroNaoAutorizado;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroRequisicaoInvalida;
+import com.lucianoortizsilva.crud.seguranca.error.GeraErroSemPermissao;
 import com.lucianoortizsilva.crud.seguranca.token.TokenJwtException;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -38,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
 	@Autowired
-	private UserDetailServiceImpl userDetailsServiceImpl;
+	private UserService userDetailsServiceImpl;
 
 	@Override
 	public void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
@@ -80,9 +81,15 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 			GeraErroNaoAutorizado geraErroNaoAutorizado = new GeraErroNaoAutorizado(response);
 			geraErroNaoAutorizado.comMensagem(e.getMessage());
 		} catch (final Exception e) {
-			log.error(e.getMessage(), e);
-			GeraErroNaoAutorizado geraErroNaoAutorizado = new GeraErroNaoAutorizado(response);
-			geraErroNaoAutorizado.comMensagem("Authorization inválida");
+			if (e.getCause() instanceof AccessDeniedException) {
+				log.error(e.getCause().getMessage(), e.getCause());
+				GeraErroSemPermissao geraErroSemPermissao = new GeraErroSemPermissao(response);
+				geraErroSemPermissao.comMensagem("Usuário sem permissão de acesso");
+			} else {
+				log.error(e.getMessage(), e);
+				GeraErroNaoAutorizado geraErroNaoAutorizado = new GeraErroNaoAutorizado(response);
+				geraErroNaoAutorizado.comMensagem("Authorization inválida");
+			}
 		}
 	}
 

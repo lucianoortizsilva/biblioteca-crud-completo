@@ -1,9 +1,7 @@
-package com.lucianoortizsilva.crud.pessoa.dto;
+package com.lucianoortizsilva.crud.cliente.dto;
 
 import java.time.LocalDate;
-import java.util.Set;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -17,7 +15,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class PessoaDTO {
+public class ClienteDTO {
 
 	@JsonIgnore
 	private Long id;
@@ -33,15 +31,5 @@ public class PessoaDTO {
 
 	@NotNull
 	private LocalDate nascimento;
-
-	@Email
-	@NotEmpty
-	private String email;
-
-	@NotEmpty
-	private String senha;
-
-	@NotNull
-	private Set<Integer> perfis;
 
 }
