@@ -32,10 +32,11 @@ No client de sua preferência, estou utilizando o [insomnia](https://insomnia.re
 > **POST** **`http://localhost:8080/login`**
 ```json
 {
-	"email" : "luciano@email.com",
-	"senha" : "12345"
+	"username" : "luciano@email.com",
+	"password" : "12345"
 }
 ```
+Copie do HEADER a Authorization retornada, para utilizar em outros endpoints.
 
 <hr>
 
