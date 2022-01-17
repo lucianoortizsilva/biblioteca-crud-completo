@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lucianoortizsilva.crud.cliente.dto.ClienteDTO;
+import com.lucianoortizsilva.crud.cliente.entity.Cliente;
 import com.lucianoortizsilva.crud.cliente.exception.ClienteNaoEncontradoException;
 import com.lucianoortizsilva.crud.cliente.exception.CpfDuplicadoException;
-import com.lucianoortizsilva.crud.cliente.model.Cliente;
 import com.lucianoortizsilva.crud.cliente.repository.ClienteRepository;
 import com.lucianoortizsilva.crud.exception.NaoEncontradoException;
 

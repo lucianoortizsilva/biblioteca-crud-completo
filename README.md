@@ -1,14 +1,15 @@
 ### Tech Stack
-- Java 8+
+- Java 11 +
 - Spring Boot
 - Spring Security
 - JWT
 
 ### O que é ?
-CRUD completo de "Clientes", utilizando JWT, e testes de integração com @WebMvcTest
+CRUD completo de "Clientes", utilizando JWT
 
 ### Como rodar ?
-- Execute **`mvn clean package -Pdev spring-boot:run`**
+- Execute **`mvn clean package -Ptest spring-boot:run`**
+- Com isso, irá também ser cadastrado automaticamente alguns dados na base H2, conforme configurado na SetupDataLoader.java
 
 ### Como executar endpoints ?
 No client de sua preferência, estou utilizando o [insomnia](https://insomnia.rest/)
@@ -27,7 +28,7 @@ No client de sua preferência, estou utilizando o [insomnia](https://insomnia.re
 
 <hr>
 
-*2º Buscar Authorization:*
+*2º Buscar Authorization para algum usuário:*
 > **POST** **`http://localhost:8080/login`**
 ```json
 {

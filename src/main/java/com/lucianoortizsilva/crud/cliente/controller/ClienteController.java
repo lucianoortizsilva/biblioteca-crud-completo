@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.lucianoortizsilva.crud.cliente.dto.ClienteDTO;
-import com.lucianoortizsilva.crud.cliente.model.Cliente;
+import com.lucianoortizsilva.crud.cliente.entity.Cliente;
 import com.lucianoortizsilva.crud.cliente.service.ClienteService;
 
 import lombok.AllArgsConstructor;

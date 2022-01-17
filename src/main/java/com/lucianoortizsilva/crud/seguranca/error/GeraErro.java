@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 
-import com.lucianoortizsilva.crud.exception.dto.MensagemErroPadrao;
+import com.lucianoortizsilva.crud.exception.model.MensagemErroPadrao;
 import com.lucianoortizsilva.crud.util.JsonUtil;
 
 import lombok.extern.slf4j.Slf4j;

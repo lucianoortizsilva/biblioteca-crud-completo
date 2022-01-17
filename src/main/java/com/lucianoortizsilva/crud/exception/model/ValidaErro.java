@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.exception.dto;
+package com.lucianoortizsilva.crud.exception.model;
 
 import java.util.ArrayList;
 import java.util.List;

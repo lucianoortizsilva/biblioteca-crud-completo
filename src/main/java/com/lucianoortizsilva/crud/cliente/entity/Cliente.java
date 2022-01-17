@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.cliente.model;
+package com.lucianoortizsilva.crud.cliente.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
