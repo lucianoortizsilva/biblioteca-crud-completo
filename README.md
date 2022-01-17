@@ -22,7 +22,7 @@ No client de sua preferência, estou utilizando o [insomnia](https://insomnia.re
 {
 	"nome" : "Luciano Ortiz",
 	"cpf" : "12345678987",
-	"nascimento" : "1984-01-31"
+	"dtNascimento" : "1984-01-31"
 }
 ```
 
@@ -50,7 +50,7 @@ No client de sua preferência, estou utilizando o [insomnia](https://insomnia.re
 {
 	"nome" : "Luciano Ortiz - teste",
 	"cpf" : "12345678987",
-	"nascimento" : "1984-01-31"
+	"dtNascimento" : "1984-01-31"
 }
 ```
 
