@@ -1,6 +1,5 @@
 package com.lucianoortizsilva.crud.cliente.service;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -10,9 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lucianoortizsilva.crud.cliente.dto.ClienteDTO;
+import com.lucianoortizsilva.crud.cliente.exception.ClienteNaoEncontradoException;
+import com.lucianoortizsilva.crud.cliente.exception.CpfDuplicadoException;
 import com.lucianoortizsilva.crud.cliente.model.Cliente;
 import com.lucianoortizsilva.crud.cliente.repository.ClienteRepository;
-import com.lucianoortizsilva.crud.exception.DadoDuplicadoException;
 import com.lucianoortizsilva.crud.exception.NaoEncontradoException;
 
 import lombok.AllArgsConstructor;
@@ -30,32 +30,40 @@ public class ClienteService {
 	public Cliente insert(final Cliente entity) {
 		final Optional<Cliente> cliente = this.clienteRepository.findByCpf(entity.getCpf());
 		if (cliente.isPresent()) {
-			throw new DadoDuplicadoException("Cliente com CPF: " + entity.getCpf() + " já foi cadastrado!");
+			throw new CpfDuplicadoException();
 		} else {
 			return this.clienteRepository.save(entity);
 		}
 	}
 
 	@Transactional
-	@PreAuthorize("#dto.id != null and (hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENTE'))")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENTE')")
 	public void update(@P("dto") final ClienteDTO dto) {
-		Cliente cliente = getById(dto.getId());
-		if (exists(cliente)) {
-			cliente = this.convertToEntity(dto);
-			this.clienteRepository.save(cliente);
+		final Optional<Cliente> cliente = this.clienteRepository.findById(dto.getId());
+		if (cliente.isPresent()) {
+			this.validarCpfDuplicadoAoAtualizarDadosCliente(dto);
+			this.clienteRepository.save(this.convertToEntity(dto));
 		} else {
-			throw new NaoEncontradoException("Usuario Não Encontrada");
+			throw new ClienteNaoEncontradoException();
+		}
+	}
+
+	private void validarCpfDuplicadoAoAtualizarDadosCliente(final ClienteDTO dto) {
+		final Long idClienteAtual = dto.getId();
+		final Optional<Cliente> cliente = this.clienteRepository.findByCpf(dto.getCpf());
+		if (cliente.isPresent() && !idClienteAtual.equals(cliente.get().getId())) {
+			throw new CpfDuplicadoException();
 		}
 	}
 
 	@Transactional
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public void delete(final Long id) {
-		final Cliente cliente = this.getById(id);
-		if (exists(cliente)) {
+		final Optional<Cliente> cliente = this.clienteRepository.findById(id);
+		if (cliente.isPresent()) {
 			this.clienteRepository.deleteById(id);
 		} else {
-			throw new NaoEncontradoException("Usuario não encontrada");
+			throw new ClienteNaoEncontradoException();
 		}
 	}
 
@@ -72,19 +80,6 @@ public class ClienteService {
 	@PreAuthorize("permitAll")
 	public Cliente convertToEntity(final ClienteDTO dto) {
 		return modelMapper.map(dto, Cliente.class);
-	}
-
-	private Cliente getById(final Long id) {
-		final Optional<Cliente> optional = this.clienteRepository.findById(id);
-		Cliente cliente = null;
-		if (optional.isPresent()) {
-			cliente = optional.get();
-		}
-		return cliente;
-	}
-
-	private static boolean exists(final Cliente cliente) {
-		return !Objects.isNull(cliente);
 	}
 
 }
