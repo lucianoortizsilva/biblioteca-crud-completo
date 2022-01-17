@@ -1,7 +1,6 @@
 package com.lucianoortizsilva.crud.seguranca.autenticacao;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -47,7 +46,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 		try {
 			final UserDTO user = (UserDTO) JsonUtil.convertToObject(req.getInputStream(), UserDTO.class);
 			log.info("Solicitando token para usuario com username: {}", user.getUsername());
-			final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = userService.getUsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), new ArrayList<>());
+			final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = userService.getUsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
 			return authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 		} catch (final Exception e) {
 			log.error(e.getMessage(), e);

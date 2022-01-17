@@ -41,8 +41,8 @@ public class UserService implements UserDetailsService {
 		return new UsernamePasswordAuthenticationToken(user, null, authorities);
 	}
 
-	public UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(final String username, final String senha, final List<SimpleGrantedAuthority> permissoes) {
-		return new UsernamePasswordAuthenticationToken(username, senha, permissoes);
+	public UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(final String username, final String password) {
+		return new UsernamePasswordAuthenticationToken(username, password);
 	}
 
 	private List<String> getPermissions(final List<Role> roles) {

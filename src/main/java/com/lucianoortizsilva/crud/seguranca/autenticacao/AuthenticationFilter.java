@@ -23,6 +23,7 @@ import com.lucianoortizsilva.crud.seguranca.error.GeraErroNaoAutorizado;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroRequisicaoInvalida;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroSemPermissao;
 import com.lucianoortizsilva.crud.seguranca.token.TokenJwtException;
+import com.lucianoortizsilva.crud.seguranca.wrapper.CachedBodyHttpServletRequest;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -33,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
  * @see https://docs.spring.io/spring-security/site/docs/5.4.7/reference/html5/
  *
  */
+//@formatter:off
 @Slf4j
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
@@ -41,14 +43,15 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 	private UserService userService;
 
 	@Override
-	public void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
+	public void doFilterInternal(HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
+		final CachedBodyHttpServletRequest cachedBodyHttpServletRequest = new CachedBodyHttpServletRequest(request);
 		try {
-			filterChain.doFilter(request, response);
+			filterChain.doFilter(cachedBodyHttpServletRequest, response);
 		} catch (final Exception e) {
 			if (e.getCause() instanceof AccessDeniedException) {
-				autenticar(request, response, filterChain);
+				autenticar(cachedBodyHttpServletRequest, response, filterChain);
 			} else if (e.getCause() instanceof SignatureException) {
-				autenticar(request, response, filterChain);
+				autenticar(cachedBodyHttpServletRequest, response, filterChain);
 			} else if (e.getCause() instanceof ExpiredJwtException) {
 				final GeraErroNaoAutorizado geraErroNaoAutorizado = new GeraErroNaoAutorizado(response);
 				geraErroNaoAutorizado.comMensagem("Token Expirado");
@@ -57,10 +60,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 				final GeraErroInesperado geraErroInesperado = new GeraErroInesperado(response);
 				geraErroInesperado.comMensagemPadrao();
 			}
-		} 
+		}
 	}
 
-	private void autenticar(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain) {
+	private void autenticar(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) {
 		try {
 			final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 			if (isEmpty(authorization) || !authorization.startsWith("Bearer")) {
@@ -69,7 +72,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			} else {
 				final UsernamePasswordAuthenticationToken usuarioAutenticado = this.userService.getUsernamePasswordAuthenticationToken(authorization);
 				SecurityContextHolder.getContext().setAuthentication(usuarioAutenticado);
-				chain.doFilter(request, response);
+				filterChain.doFilter(request, response);
 			}
 		} catch (final UsernameNotFoundException e) {
 			log.error(e.getMessage(), e);
@@ -86,10 +89,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 				geraErroSemPermissao.comMensagem("Usuário sem permissão");
 			} else {
 				log.error(e.getMessage(), e);
-				GeraErroNaoAutorizado geraErroNaoAutorizado = new GeraErroNaoAutorizado(response);
-				geraErroNaoAutorizado.comMensagem("Authorization inválida");
+				GeraErroInesperado geraErroInesperado = new GeraErroInesperado(response);
+				geraErroInesperado.comMensagemPadrao();
 			}
-		} 
+		}
 	}
 
 }

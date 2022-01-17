@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -46,6 +47,7 @@ public class WebSecurityConfigurerCustom extends WebSecurityConfigurerAdapter {
 		permitirVisualizarTelaBancoH2(http);
 		http.addFilter(new LoginFilter(authenticationManager(), this.userService, this.tokenJwt));
 		http.cors().and().csrf().disable();
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 
 	private void permitirVisualizarTelaBancoH2(HttpSecurity http) throws Exception {
