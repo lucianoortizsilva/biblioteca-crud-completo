@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.seguranca.filter;
+package com.lucianoortizsilva.crud.seguranca.autenticacao;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -18,7 +18,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.lucianoortizsilva.crud.seguranca.autenticacao.UserService;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroInesperado;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroNaoAutorizado;
 import com.lucianoortizsilva.crud.seguranca.error.GeraErroRequisicaoInvalida;
@@ -36,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Component
-public class ExceptionHandlerFilter extends OncePerRequestFilter {
+public class AuthenticationFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private UserService userService;

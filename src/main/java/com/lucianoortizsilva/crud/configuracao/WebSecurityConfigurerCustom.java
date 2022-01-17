@@ -11,14 +11,13 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.lucianoortizsilva.crud.seguranca.autenticacao.UserService;
 import com.lucianoortizsilva.crud.seguranca.autenticacao.LoginFilter;
+import com.lucianoortizsilva.crud.seguranca.autenticacao.UserService;
 import com.lucianoortizsilva.crud.seguranca.token.TokenJwt;
 
 /**
@@ -38,7 +37,7 @@ public class WebSecurityConfigurerCustom extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private TokenJwt tokenJwt;
-	
+
 	@Autowired
 	private UserService userService;
 
@@ -47,7 +46,6 @@ public class WebSecurityConfigurerCustom extends WebSecurityConfigurerAdapter {
 		permitirVisualizarTelaBancoH2(http);
 		http.addFilter(new LoginFilter(authenticationManager(), this.userService, this.tokenJwt));
 		http.cors().and().csrf().disable();
-		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS);
 	}
 
 	private void permitirVisualizarTelaBancoH2(HttpSecurity http) throws Exception {
