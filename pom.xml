@@ -10,10 +10,10 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.lucianoortizsilva</groupId>
-	<artifactId>springboot-crud</artifactId>
+	<artifactId>clientes-backend-crud</artifactId>
 	<version>1.0</version>
-	<name>springboot-crud</name>
-	<description>Demo project for Spring Boot</description>
+	<name>clientes-backend-crud</name>
+	<description>Projeto de um CRUD de clientes, utilizando JWT e spring security</description>
 
 	<properties>
 		<java.version>11</java.version>
