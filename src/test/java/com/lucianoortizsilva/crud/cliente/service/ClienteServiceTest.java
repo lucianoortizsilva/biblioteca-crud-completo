@@ -22,8 +22,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import com.lucianoortizsilva.crud.cliente.dto.ClienteDTO;
 import com.lucianoortizsilva.crud.cliente.entity.Cliente;
@@ -38,11 +37,9 @@ import com.lucianoortizsilva.crud.cliente.repository.ClienteRepository;
  * 
  */
 //@formatter:off
-@SpringBootTest
-@AutoConfigureMockMvc
 @RunWith(JUnitPlatform.class)
 @ExtendWith(MockitoExtension.class)
-class ClienteServiceTest {
+public class ClienteServiceTest {
 	
 	static final Long ID_RANDOMICO =  nextLong();
 	static final Long ID_RANDOMICO_OUTRO =  nextLong();
@@ -52,10 +49,27 @@ class ClienteServiceTest {
 	static final Cliente ENTITY_CLIENTE_ALEATORIO_MESMO_CPF = new Cliente(ID_RANDOMICO_OUTRO, ENTITY_CLIENTE_ALEATORIO.getCpf());
 			
 	
+	@InjectMocks
+	ClienteService clienteService;
+	
+	@Mock
+	ClienteRepository clienteRepository;
+	
+	@Mock
+	ModelMapper modelMapper;
+	
+	@org.junit.Test
+	@WithMockUser
+	@DisplayName("QUANDO tento deletar um cliente ENTÃO deverá ser deletado com sucesso")
+	public void deletar_deveDeletarClienteComSucesso() {
+		when(clienteRepository.findById(ENTITY_CLIENTE_ALEATORIO.getId())).thenReturn(Optional.of(ENTITY_CLIENTE_ALEATORIO));
+		this.clienteService.delete(ENTITY_CLIENTE_ALEATORIO.getId());
+		Mockito.verify(this.clienteRepository, Mockito.atLeast(1)).deleteById(anyLong());
+	}
 	
 	@Nested
 	@DisplayName("Testando Cenário Perfeito")
-	class CenarioPerfeitoTest {
+	 class CenarioPerfeitoTest {
 
 		@InjectMocks
 		ClienteService clienteService;
@@ -66,7 +80,7 @@ class ClienteServiceTest {
 		@Mock
 		ModelMapper modelMapper;
 		
-		@Test
+		@org.junit.Test
 		@DisplayName("QUANDO tento inserir um cliente que não existe ENTÃO deverá ser cadastrado com sucesso")
 		void inserir_deveInserirClienteComSucesso() {
 			when(clienteRepository.findByCpf(ENTITY_CLIENTE_ALEATORIO.getCpf())).thenReturn(Optional.empty());

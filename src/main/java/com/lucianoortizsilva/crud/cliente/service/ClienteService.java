@@ -3,8 +3,6 @@ package com.lucianoortizsilva.crud.cliente.service;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,14 +16,12 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-@PreAuthorize("isAuthenticated()")
 public class ClienteService {
 
 	private ModelMapper modelMapper;
 	private ClienteRepository clienteRepository;
 
 	@Transactional
-	@PreAuthorize("permitAll")
 	public Cliente insert(final Cliente entity) {
 		final Optional<Cliente> cliente = this.clienteRepository.findByCpf(entity.getCpf());
 		if (cliente.isPresent()) {
@@ -35,8 +31,9 @@ public class ClienteService {
 		}
 	}
 
+	
+	
 	@Transactional
-	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public void delete(final Long id) {
 		final Optional<Cliente> cliente = this.clienteRepository.findById(id);
 		if (cliente.isPresent()) {
@@ -46,7 +43,8 @@ public class ClienteService {
 		}
 	}
 
-	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENTE') or hasAuthority('ROLE_SUPORTE')")
+	
+	
 	public Cliente findById(final Long id) {
 		Optional<Cliente> cliente = clienteRepository.findById(id);
 		if (cliente.isPresent()) {
@@ -56,9 +54,10 @@ public class ClienteService {
 		}
 	}
 
+	
+	
 	@Transactional
-	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENTE')")
-	public void update(@P("dto") final ClienteDTO dto) {
+	public void update(final ClienteDTO dto) {
 		final Optional<Cliente> cliente = this.clienteRepository.findById(dto.getId());
 		if (cliente.isPresent()) {
 			this.validarCpfDuplicadoAoAtualizarDadosCliente(dto);
@@ -68,6 +67,8 @@ public class ClienteService {
 		}
 	}
 
+	
+	
 	private void validarCpfDuplicadoAoAtualizarDadosCliente(final ClienteDTO dto) {
 		final Optional<Cliente> clienteCadastrado = this.clienteRepository.findByCpf(dto.getCpf());
 		if (clienteCadastrado.isPresent()) {
@@ -79,7 +80,8 @@ public class ClienteService {
 		}
 	}
 
-	@PreAuthorize("permitAll")
+	
+	
 	public Cliente convertToEntity(final ClienteDTO dto) {
 		return modelMapper.map(dto, Cliente.class);
 	}

@@ -35,12 +35,23 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
+		<!-- spring-security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
+		<!-- spring-security -->
 
-		<!-- TESTES -->
+		<!-- junit -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -61,7 +72,7 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- TESTES -->
+		<!-- junit -->
 
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
@@ -106,8 +117,20 @@
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
 		<!-- https://www.baeldung.com/spring-reading-httpservletrequest-multiple-times -->
-
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- garante que todas as dependências transitivas do Spring Security usem os módulos Spring 5.3.9. -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>5.3.9</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<finalName>${projects.artifactId}</finalName>

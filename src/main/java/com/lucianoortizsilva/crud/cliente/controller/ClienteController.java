@@ -5,6 +5,8 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,12 +25,14 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
+@PreAuthorize("isAuthenticated()")
 @RequestMapping(value = "/clientes")
 public class ClienteController {
 
 	private ClienteService clienteService;
 
 	@PostMapping
+	@PreAuthorize("permitAll")
 	public ResponseEntity<Void> insert(@RequestBody @Valid final ClienteDTO dto) {
 		Cliente cliente = this.clienteService.convertToEntity(dto);
 		cliente = this.clienteService.insert(cliente);
@@ -36,20 +40,29 @@ public class ClienteController {
 		return ResponseEntity.created(uri).build();
 	}
 
+	
+	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Void> update(@RequestBody @Valid final ClienteDTO dto, @PathVariable(value = "id", required = true) final Long id) {
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENTE')")
+	public ResponseEntity<Void> update(@RequestBody @Valid @P("dto") final ClienteDTO dto, @PathVariable(value = "id", required = true) final Long id) {
 		dto.setId(id);
 		this.clienteService.update(dto);
 		return ResponseEntity.noContent().build();
 	}
 
+	
+	
 	@DeleteMapping(value = "/{id}")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public ResponseEntity<Void> delete(@PathVariable(value = "id", required = true) final Long id) {
 		this.clienteService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
+	
+	
 	@GetMapping(value = "/{id}")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENTE') or hasAuthority('ROLE_SUPORTE')")
 	public ResponseEntity<Cliente> findById(@PathVariable(value = "id", required = true) final Long id) {
 		return ResponseEntity.ok().body(this.clienteService.findById(id));
 	}
