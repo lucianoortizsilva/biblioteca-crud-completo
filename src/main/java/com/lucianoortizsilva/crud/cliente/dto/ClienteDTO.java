@@ -9,12 +9,14 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class ClienteDTO {
 
 	@JsonIgnore
@@ -31,5 +33,10 @@ public class ClienteDTO {
 
 	@NotNull
 	private LocalDate dtNascimento;
+
+	public ClienteDTO(final Long id, final String cpf) {
+		this.id = id;
+		this.cpf = cpf;
+	}
 
 }

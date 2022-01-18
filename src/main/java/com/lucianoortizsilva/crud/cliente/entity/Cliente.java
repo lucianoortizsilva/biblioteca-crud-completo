@@ -46,4 +46,9 @@ public class Cliente implements Serializable {
 		this.dtNascimento = nascimento;
 	}
 
+	public Cliente(final Long id, final String cpf) {
+		this.id = id;
+		this.cpf = cpf;
+	}
+
 }

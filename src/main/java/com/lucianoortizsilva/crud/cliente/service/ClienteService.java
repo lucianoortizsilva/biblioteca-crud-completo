@@ -13,7 +13,6 @@ import com.lucianoortizsilva.crud.cliente.entity.Cliente;
 import com.lucianoortizsilva.crud.cliente.exception.ClienteNaoEncontradoException;
 import com.lucianoortizsilva.crud.cliente.exception.CpfDuplicadoException;
 import com.lucianoortizsilva.crud.cliente.repository.ClienteRepository;
-import com.lucianoortizsilva.crud.exception.NaoEncontradoException;
 
 import lombok.AllArgsConstructor;
 
@@ -73,7 +72,7 @@ public class ClienteService {
 		if (cliente.isPresent()) {
 			return cliente.get();
 		} else {
-			throw new NaoEncontradoException("Cliente não encontrado");
+			throw new ClienteNaoEncontradoException();
 		}
 	}
 
