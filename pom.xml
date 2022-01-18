@@ -61,23 +61,7 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-		<!-- <dependency> -->
-		<!-- <groupId>org.junit.vintage</groupId> -->
-		<!-- <artifactId>junit-vintage-engine</artifactId> -->
-		<!-- <scope>test</scope> -->
-		<!-- <exclusions> -->
-		<!-- <exclusion> -->
-		<!-- <groupId>org.hamcrest</groupId> -->
-		<!-- <artifactId>hamcrest-core</artifactId> -->
-		<!-- </exclusion> -->
-		<!-- </exclusions> -->
-		<!-- </dependency> -->
-		<!-- <dependency> -->
-		<!-- <groupId>org.springframework.security</groupId> -->
-		<!-- <artifactId>spring-security-test</artifactId> -->
-		<!-- <scope>test</scope> -->
-		<!-- </dependency> -->
+		<!-- TESTES -->
 
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
@@ -121,6 +105,8 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
+		<!-- https://www.baeldung.com/spring-reading-httpservletrequest-multiple-times -->
+
 	</dependencies>
 
 	<build>
@@ -147,7 +133,7 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
-				<maven.test.skip>true</maven.test.skip>
+				<maven.test.skip>false</maven.test.skip>
 				<spring.profiles.active>dev</spring.profiles.active>
 			</properties>
 		</profile>

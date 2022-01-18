@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.lucianoortizsilva.crud.cliente.dto.ClienteDTO;
 import com.lucianoortizsilva.crud.cliente.entity.Cliente;
+import com.lucianoortizsilva.crud.cliente.exception.ClienteComCpfDuplicadoException;
 import com.lucianoortizsilva.crud.cliente.exception.ClienteNaoEncontradoException;
-import com.lucianoortizsilva.crud.cliente.exception.CpfDuplicadoException;
 import com.lucianoortizsilva.crud.cliente.repository.ClienteRepository;
 
 import lombok.AllArgsConstructor;
@@ -29,29 +29,9 @@ public class ClienteService {
 	public Cliente insert(final Cliente entity) {
 		final Optional<Cliente> cliente = this.clienteRepository.findByCpf(entity.getCpf());
 		if (cliente.isPresent()) {
-			throw new CpfDuplicadoException();
+			throw new ClienteComCpfDuplicadoException();
 		} else {
 			return this.clienteRepository.save(entity);
-		}
-	}
-
-	@Transactional
-	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENTE')")
-	public void update(@P("dto") final ClienteDTO dto) {
-		final Optional<Cliente> cliente = this.clienteRepository.findById(dto.getId());
-		if (cliente.isPresent()) {
-			this.validarCpfDuplicadoAoAtualizarDadosCliente(dto);
-			this.clienteRepository.save(this.convertToEntity(dto));
-		} else {
-			throw new ClienteNaoEncontradoException();
-		}
-	}
-
-	private void validarCpfDuplicadoAoAtualizarDadosCliente(final ClienteDTO dto) {
-		final Long idClienteAtual = dto.getId();
-		final Optional<Cliente> cliente = this.clienteRepository.findByCpf(dto.getCpf());
-		if (cliente.isPresent() && !idClienteAtual.equals(cliente.get().getId())) {
-			throw new CpfDuplicadoException();
 		}
 	}
 
@@ -73,6 +53,29 @@ public class ClienteService {
 			return cliente.get();
 		} else {
 			throw new ClienteNaoEncontradoException();
+		}
+	}
+
+	@Transactional
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENTE')")
+	public void update(@P("dto") final ClienteDTO dto) {
+		final Optional<Cliente> cliente = this.clienteRepository.findById(dto.getId());
+		if (cliente.isPresent()) {
+			this.validarCpfDuplicadoAoAtualizarDadosCliente(dto);
+			this.clienteRepository.save(this.convertToEntity(dto));
+		} else {
+			throw new ClienteNaoEncontradoException();
+		}
+	}
+
+	private void validarCpfDuplicadoAoAtualizarDadosCliente(final ClienteDTO dto) {
+		final Optional<Cliente> clienteCadastrado = this.clienteRepository.findByCpf(dto.getCpf());
+		if (clienteCadastrado.isPresent()) {
+			final Long idClienteCadastrado = clienteCadastrado.get().getId();
+			final Long idClienteParaAtualizar = dto.getId();
+			if (!idClienteCadastrado.equals(idClienteParaAtualizar)) {
+				throw new ClienteComCpfDuplicadoException();
+			}
 		}
 	}
 
