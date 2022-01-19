@@ -43,7 +43,7 @@ class ClienteServiceTest {
 	static final Long ID_RANDOMICO =  nextLong();
 	static final Long ID_RANDOMICO_OUTRO =  nextLong();
 	static final String CPF_ALEATORIO =  randomNumeric(11);
-	static final ClienteDTO DTO_CLIENTE_ALEATORIO = new ClienteDTO(ID_RANDOMICO, CPF_ALEATORIO);
+	static final ClienteDTO DTO_CLIENTE_ALEATORIO = ClienteDTO.builder().id(ID_RANDOMICO).cpf(CPF_ALEATORIO).build();
 	static final Cliente ENTITY_CLIENTE_ALEATORIO = new Cliente(ID_RANDOMICO, CPF_ALEATORIO);
 	static final Cliente ENTITY_CLIENTE_ALEATORIO_MESMO_CPF = new Cliente(ID_RANDOMICO_OUTRO, ENTITY_CLIENTE_ALEATORIO.getCpf());
 			
