@@ -11,7 +11,6 @@ import javax.persistence.Id;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -19,7 +18,6 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Cliente implements Serializable {
 
@@ -40,15 +38,19 @@ public class Cliente implements Serializable {
 	@Column(nullable = false)
 	private LocalDate dtNascimento;
 
-	public Cliente(final String nome, final String cpf, final LocalDate nascimento) {
-		this.nome = nome;
-		this.cpf = cpf;
-		this.dtNascimento = nascimento;
+	public Cliente() {
+		super();
 	}
 
 	public Cliente(final Long id, final String cpf) {
 		this.id = id;
 		this.cpf = cpf;
+	}
+
+	public Cliente(final String nome, final String cpf, final LocalDate nascimento) {
+		this.nome = nome;
+		this.cpf = cpf;
+		this.dtNascimento = nascimento;
 	}
 
 }

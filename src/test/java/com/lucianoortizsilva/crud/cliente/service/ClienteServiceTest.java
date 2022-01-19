@@ -38,7 +38,7 @@ import com.lucianoortizsilva.crud.cliente.repository.ClienteRepository;
 //@formatter:off
 @RunWith(JUnitPlatform.class)
 @ExtendWith(MockitoExtension.class)
-public class ClienteServiceTest {
+class ClienteServiceTest {
 	
 	static final Long ID_RANDOMICO =  nextLong();
 	static final Long ID_RANDOMICO_OUTRO =  nextLong();
