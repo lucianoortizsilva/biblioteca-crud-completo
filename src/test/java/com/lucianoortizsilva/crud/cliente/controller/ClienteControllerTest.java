@@ -1,10 +1,11 @@
 package com.lucianoortizsilva.crud.cliente.controller;
 
-import static com.lucianoortizsilva.crud.cliente.util.TestUtil.cpfMaxExcedido;
-import static com.lucianoortizsilva.crud.cliente.util.TestUtil.nomeMaxExcedido;
-import static com.lucianoortizsilva.crud.cliente.util.TestUtil.qualquerCPF;
-import static com.lucianoortizsilva.crud.cliente.util.TestUtil.qualquerDate;
-import static com.lucianoortizsilva.crud.cliente.util.TestUtil.qualquerString;
+import static com.lucianoortizsilva.crud.cliente.util.TestClienteUtil.qualquerCpf;
+import static com.lucianoortizsilva.crud.cliente.util.TestClienteUtil.cpfMaxCaracterExcedido;
+import static com.lucianoortizsilva.crud.cliente.util.TestClienteUtil.qualquerDate;
+import static com.lucianoortizsilva.crud.cliente.util.TestClienteUtil.qualquerNome;
+import static com.lucianoortizsilva.crud.cliente.util.TestClienteUtil.qualquerID;
+import static com.lucianoortizsilva.crud.cliente.util.TestClienteUtil.nomeMaxCaracterExcedido;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -164,7 +165,7 @@ class ClienteControllerTest {
 		@Test
 		@DisplayName("DADO QUE não estou autenticado, QUANDO acesso POST /clientes, E informo todos campos corretamente, ENTÃO deverá retornar 201")
 		void insert_deveRetornarCriadoComSucesso() throws Exception {
-			final ClienteDTO dto = ClienteDTO.builder().id(1L).cpf(qualquerCPF()).nome(qualquerString()).dtNascimento(qualquerDate()).build();
+			final ClienteDTO dto = ClienteDTO.builder().id(1L).cpf(qualquerCpf()).nome(qualquerNome()).dtNascimento(qualquerDate()).build();
 			when(clienteRepository.save(any())).thenReturn(modelMapper.map(dto, Cliente.class));
 			final String content = objectMapper.writeValueAsString(dto);
 			mvc.perform(post("/clientes").content(content).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andExpect(header().string("Location", "http://localhost/clientes/1"));
@@ -173,7 +174,7 @@ class ClienteControllerTest {
 		@Test
 		@DisplayName("DADO QUE informo cpf null, QUANDO acesso POST /clientes, ENTÃO deverá retornar 422")
 		void insert_comCpfNull_deveRetornarUnprocessableEntity() throws Exception {
-			final ClienteDTO dto = ClienteDTO.builder().id(1L).cpf(null).nome(qualquerString()).dtNascimento(qualquerDate()).build();
+			final ClienteDTO dto = ClienteDTO.builder().id(qualquerID()).cpf(null).nome(qualquerNome()).dtNascimento(qualquerDate()).build();
 			when(clienteRepository.save(any())).thenReturn(modelMapper.map(dto, Cliente.class));
 			final String content = objectMapper.writeValueAsString(dto);
 			mvc.perform(post("/clientes").content(content).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnprocessableEntity());
@@ -182,7 +183,7 @@ class ClienteControllerTest {
 		@Test
 		@DisplayName("DADO QUE informo cpf com MAX caracter excedido, QUANDO acesso POST /clientes, ENTÃO deverá retornar 422")
 		void insert_comCpfMaxCaractersExcedido_deveRetornarUnprocessableEntity() throws Exception {
-			final ClienteDTO dto = ClienteDTO.builder().id(1L).cpf(cpfMaxExcedido()).nome(qualquerString()).dtNascimento(qualquerDate()).build();
+			final ClienteDTO dto = ClienteDTO.builder().id(qualquerID()).cpf(cpfMaxCaracterExcedido()).nome(qualquerNome()).dtNascimento(qualquerDate()).build();
 			when(clienteRepository.save(any())).thenReturn(modelMapper.map(dto, Cliente.class));
 			final String content = objectMapper.writeValueAsString(dto);
 			mvc.perform(post("/clientes").content(content).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnprocessableEntity());
@@ -191,7 +192,7 @@ class ClienteControllerTest {
 		@Test
 		@DisplayName("DADO QUE informo nome null, QUANDO acesso POST /clientes, ENTÃO deverá retornar 422")
 		void insert_comNomeNull_deveRetornarUnprocessableEntity() throws Exception {
-			final ClienteDTO dto = ClienteDTO.builder().id(1L).cpf(qualquerCPF()).nome(null).dtNascimento(qualquerDate()).build();
+			final ClienteDTO dto = ClienteDTO.builder().id(qualquerID()).cpf(qualquerCpf()).nome(null).dtNascimento(qualquerDate()).build();
 			when(clienteRepository.save(any())).thenReturn(modelMapper.map(dto, Cliente.class));
 			final String content = objectMapper.writeValueAsString(dto);
 			mvc.perform(post("/clientes").content(content).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnprocessableEntity());
@@ -200,7 +201,7 @@ class ClienteControllerTest {
 		@Test
 		@DisplayName("DADO QUE informo nome com MAX caracter excedido, QUANDO acesso POST /clientes, ENTÃO deverá retornar 422")
 		void insert_comNomeMaxCaractersExcedido_deveRetornarUnprocessableEntity() throws Exception {
-			final ClienteDTO dto = ClienteDTO.builder().id(1L).cpf(qualquerCPF()).nome(nomeMaxExcedido()).dtNascimento(qualquerDate()).build();
+			final ClienteDTO dto = ClienteDTO.builder().id(qualquerID()).cpf(qualquerCpf()).nome(nomeMaxCaracterExcedido()).dtNascimento(qualquerDate()).build();
 			when(clienteRepository.save(any())).thenReturn(modelMapper.map(dto, Cliente.class));
 			final String content = objectMapper.writeValueAsString(dto);
 			mvc.perform(post("/clientes").content(content).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnprocessableEntity());
@@ -209,7 +210,7 @@ class ClienteControllerTest {
 		@Test
 		@DisplayName("DADO QUE informo dtNascimento null, QUANDO acesso POST /clientes, ENTÃO deverá retornar 422")
 		void insert_comNomeDtNascimentoNull_deveRetornarUnprocessableEntity() throws Exception {
-			final ClienteDTO dto = ClienteDTO.builder().id(1L).cpf(qualquerCPF()).nome(qualquerString()).dtNascimento(null).build();
+			final ClienteDTO dto = ClienteDTO.builder().id(qualquerID()).cpf(qualquerCpf()).nome(qualquerNome()).dtNascimento(null).build();
 			when(clienteRepository.save(any())).thenReturn(modelMapper.map(dto, Cliente.class));
 			final String content = objectMapper.writeValueAsString(dto);
 			mvc.perform(post("/clientes").content(content).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnprocessableEntity());

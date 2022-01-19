@@ -9,25 +9,25 @@ import java.time.LocalDate;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class TestUtil {
+public class TestClienteUtil {
 
-	public static Long qualquerLong() {
+	public static Long qualquerID() {
 		return nextLong();
 	}
 
-	public static String qualquerCPF() {
+	public static String qualquerCpf() {
 		return randomNumeric(11);
 	}
 
-	public static String cpfMaxExcedido() {
+	public static String cpfMaxCaracterExcedido() {
 		return randomNumeric(12);
 	}
 
-	public static String qualquerString() {
-		return randomAlphanumeric(10);
+	public static String qualquerNome() {
+		return randomAlphanumeric(120);
 	}
 
-	public static String nomeMaxExcedido() {
+	public static String nomeMaxCaracterExcedido() {
 		return randomAlphanumeric(121);
 	}
 
