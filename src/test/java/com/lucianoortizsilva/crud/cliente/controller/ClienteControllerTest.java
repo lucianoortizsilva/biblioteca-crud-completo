@@ -1,17 +1,18 @@
 package com.lucianoortizsilva.crud.cliente.controller;
 
-import static com.lucianoortizsilva.crud.cliente.util.TestClienteUtil.qualquerCpf;
 import static com.lucianoortizsilva.crud.cliente.util.TestClienteUtil.cpfMaxCaracterExcedido;
-import static com.lucianoortizsilva.crud.cliente.util.TestClienteUtil.qualquerDate;
-import static com.lucianoortizsilva.crud.cliente.util.TestClienteUtil.qualquerNome;
-import static com.lucianoortizsilva.crud.cliente.util.TestClienteUtil.qualquerID;
 import static com.lucianoortizsilva.crud.cliente.util.TestClienteUtil.nomeMaxCaracterExcedido;
+import static com.lucianoortizsilva.crud.cliente.util.TestClienteUtil.qualquerCpf;
+import static com.lucianoortizsilva.crud.cliente.util.TestClienteUtil.qualquerDate;
+import static com.lucianoortizsilva.crud.cliente.util.TestClienteUtil.qualquerID;
+import static com.lucianoortizsilva.crud.cliente.util.TestClienteUtil.qualquerNome;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,7 +27,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -104,7 +104,7 @@ class ClienteControllerTest {
 		@WithMockUserAdmin
 		@DisplayName("DADO QUE estou autenticado com permissão de acesso, E cliente pesquisado existe, QUANDO acesso GET /clientes/{id}, ENTÃO deverá retornar 200")
 		void clientesById_deveRetornarComSucesso() throws Exception {
-			Mockito.when(clienteRepository.findById(1L)).thenReturn(Optional.of(new Cliente()));
+			when(clienteRepository.findById(1L)).thenReturn(Optional.of(new Cliente()));
 			mvc.perform(get("/clientes/1").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		}
 
@@ -144,9 +144,9 @@ class ClienteControllerTest {
 
 		@Test
 		@WithMockUserAdmin
-		@DisplayName("DADO QUE estou autenticado com permissão de acesso, E cliente pesquisado existe, QUANDO acesso DELETE /clientes/{id}, ENTÃO deverá retornar 200")
+		@DisplayName("DADO QUE estou autenticado com permissão de acesso, E cliente pesquisado existe, QUANDO acesso DELETE /clientes/{id}, ENTÃO deverá retornar 204")
 		void deleteById_deveRetornarComSucesso() throws Exception {
-			Mockito.when(clienteRepository.findById(1L)).thenReturn(Optional.of(new Cliente()));
+			when(clienteRepository.findById(1L)).thenReturn(Optional.of(new Cliente()));
 			mvc.perform(delete("/clientes/1").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
 		}
 
@@ -217,4 +217,32 @@ class ClienteControllerTest {
 		}
 	}
 
+	@Nested
+	@DisplayName("#Testando > PUT /clientes")
+	class PutClientes {
+
+		@Autowired
+		private ObjectMapper objectMapper;
+
+		@Test
+		@WithMockUserAdmin
+		@DisplayName("DADO QUE estou autenticado com permissão de acesso, QUANDO acesso PUT /clientes, E informo todos campos corretamente, ENTÃO deverá retornar 204")
+		void update_comUsuarioComPermissao_deveRetornarAtualizadoComSucesso() throws Exception {
+			final ClienteDTO dto = ClienteDTO.builder().id(1L).cpf(qualquerCpf()).nome(qualquerNome()).dtNascimento(qualquerDate()).build();
+			final Cliente clienteCadastrado = new Cliente(dto.getNome(), dto.getCpf(), dto.getDtNascimento());
+			when(clienteRepository.findById(1L)).thenReturn(Optional.of(clienteCadastrado));
+			final String content = objectMapper.writeValueAsString(dto);
+			mvc.perform(put("/clientes/1").content(content).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
+		}
+		
+		@Test
+		@WithMockUserSuporte
+		@DisplayName("DADO QUE estou autenticado, E estou com usuário com permissão de suporte, QUANDO acesso PUT /clientes/{id}, ENTÃO deverá lançar erro 403")
+		void update_comUsuarioSuporte_deveGerarForbidden() throws Exception {
+			final ClienteDTO dto = ClienteDTO.builder().id(1L).cpf(qualquerCpf()).nome(qualquerNome()).dtNascimento(qualquerDate()).build();
+			final String content = objectMapper.writeValueAsString(dto);
+			mvc.perform(put("/clientes/1").content(content).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isForbidden());
+		}
+	}
+	
 }
