@@ -3,7 +3,8 @@ spring:
     active: "@spring.profiles.active@"
   jpa:
     open-in-view: false
-jwt:
-  secret: sequenciadecaracteresparaassinartoken
-  expiration: 120000 # 2minutos
-  #expiration: 3600000
+
+app:
+  jwt:
+    secret: "W%@VBrlgz#x@wfCwdk%2Gww^svc$AFBYskQ*H0m0ih@&igdNo*" #sequencia de caracteres para assinar token
+    expiration: 120000 # 2minutos
