@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.exception.model;
+package com.lucianoortizsilva.crud.exception.dto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,13 +6,13 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class ValidaErro extends MensagemErroPadrao {
+public class MensagemMultiErro extends MensagemErroPadrao {
 
 	private static final long serialVersionUID = 7559055929703116325L;
 
 	private List<MensagemCampo> erros = new ArrayList<>();
 
-	public ValidaErro(final Integer status, final String erro, final String mensagem, final String path) {
+	public MensagemMultiErro(final Integer status, final String erro, final String mensagem, final String path) {
 		super(status, erro, mensagem, path);
 	}
 

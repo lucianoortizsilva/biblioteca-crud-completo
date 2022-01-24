@@ -1,5 +1,6 @@
-package com.lucianoortizsilva.crud.security.config;
+package com.lucianoortizsilva.crud.config;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +13,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.lucianoortizsilva.crud.cliente.entity.Cliente;
+import com.lucianoortizsilva.crud.cliente.repository.ClienteRepository;
 import com.lucianoortizsilva.crud.security.authentication.user.Permission;
 import com.lucianoortizsilva.crud.security.authentication.user.PermissionEnum;
 import com.lucianoortizsilva.crud.security.authentication.user.PermissionRepository;
@@ -22,9 +25,7 @@ import com.lucianoortizsilva.crud.security.authentication.user.User;
 import com.lucianoortizsilva.crud.security.authentication.user.UserRepository;
 
 @Component
-public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
-
-	private boolean alreadySetup = false;
+public class LoadDatabaseDefault implements ApplicationListener<ContextRefreshedEvent> {
 
 	@Autowired
 	private UserRepository userRepository;
@@ -38,11 +39,12 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+	@Autowired
+	private ClienteRepository clienteRepository;
+
 	@Override
 	@Transactional
-	public void onApplicationEvent(ContextRefreshedEvent event) {
-		if (alreadySetup)
-			return;
+	public void onApplicationEvent(final ContextRefreshedEvent event) {
 
 		final Permission create = createPermissionIfNotFound(PermissionEnum.CREATE.name());
 		final Permission read = createPermissionIfNotFound(PermissionEnum.READ.name());
@@ -53,20 +55,18 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 		final Role roleCliente = createRoleIfNotFound(RoleEnum.ROLE_CLIENTE, Arrays.asList(read, update));
 		final Role roleSuporte = createRoleIfNotFound(RoleEnum.ROLE_SUPORTE, Arrays.asList(read));
 
-		final String senha = "12345";
-		final User luciano = new User("luciano@email.com", bCryptPasswordEncoder.encode(senha), Boolean.TRUE, Arrays.asList(roleAdmin));
-		final User mariana = new User("mariana@email.com", bCryptPasswordEncoder.encode(senha), Boolean.TRUE, Arrays.asList(roleCliente));
-		final User vanessa = new User("vanessa@email.com", bCryptPasswordEncoder.encode(senha), Boolean.TRUE, Arrays.asList(roleSuporte));
+		createUserIfNotFound("luciano@fakeMail.com", roleAdmin);
+		createUserIfNotFound("mariana@fakeMail.com", roleCliente);
+		createUserIfNotFound("vanessa@fakeMail.com", roleSuporte);
 
-		final List<User> usuarios = List.of(luciano, mariana, vanessa);
-		
-		userRepository.saveAll(usuarios);
-		
-		alreadySetup = true;
+		createClienteIfNotFound("Batman", "52678324052", LocalDate.of(1990, 05, 17));
+		createClienteIfNotFound("Super Homem", "54671702010", LocalDate.of(1988, 01, 21));
+		createClienteIfNotFound("Homem Aranha", "54096739057", LocalDate.of(1984, 01, 31));
+		createClienteIfNotFound("Mulher Maravilha", "70585164053", LocalDate.of(1981, 10, 07));
 	}
 
 	@Transactional
-	Permission createPermissionIfNotFound(final String name) {
+	private Permission createPermissionIfNotFound(final String name) {
 		Optional<Permission> permission = permissionRepository.findByName(name);
 		if (permission.isEmpty()) {
 			return permissionRepository.save(new Permission(name));
@@ -76,12 +76,29 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 	}
 
 	@Transactional
-	Role createRoleIfNotFound(final RoleEnum roleEnum, final List<Permission> permissions) {
+	private Role createRoleIfNotFound(final RoleEnum roleEnum, final List<Permission> permissions) {
 		Optional<Role> role = roleRepository.findByName(roleEnum.name());
 		if (role.isEmpty()) {
 			return roleRepository.save(new Role(roleEnum.name(), permissions));
 		} else {
 			return null;
+		}
+	}
+
+	@Transactional
+	private void createClienteIfNotFound(final String nome, final String cpf, final LocalDate dtNascimento) {
+		Optional<Cliente> cliente = clienteRepository.findByCpf(cpf);
+		if (cliente.isEmpty()) {
+			clienteRepository.save(new Cliente(nome, cpf, dtNascimento));
+		}
+	}
+
+	@Transactional
+	private void createUserIfNotFound(final String username, final Role role) {
+		Optional<User> user = userRepository.findByUsername(username);
+		if (user.isEmpty()) {
+			final String password = bCryptPasswordEncoder.encode("12345");
+			userRepository.save(new User(username, password, true, Arrays.asList(role)));
 		}
 	}
 

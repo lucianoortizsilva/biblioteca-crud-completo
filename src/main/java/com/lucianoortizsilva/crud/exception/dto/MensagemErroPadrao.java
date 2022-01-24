@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.exception.model;
+package com.lucianoortizsilva.crud.exception.dto;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

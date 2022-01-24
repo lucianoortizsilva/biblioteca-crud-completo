@@ -1,5 +1,10 @@
 package com.lucianoortizsilva.crud.exception;
 
+/**
+ * 
+ * HTTP 401
+ *
+ */
 public class NaoAutorizadoException extends RuntimeException {
 
 	private static final long serialVersionUID = -3623720129927238779L;

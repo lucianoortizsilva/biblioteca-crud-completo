@@ -5,11 +5,13 @@
 - JWT
 
 ### O que é ?
-CRUD completo de "Clientes", utilizando JWT
+- CRUD completo de "Clientes"
+- Geração de token JWT
+- Refresh token
 
 ### Como rodar ?
-- Execute **`mvn clean package -Ptest spring-boot:run`**
-- Com isso, irá também ser cadastrado automaticamente alguns dados na base H2, conforme configurado na SetupDataLoader.java
+- Execute **`mvn clean package spring-boot:run`**
+- Com isso, irá também ser cadastrado automaticamente alguns dados na base H2, conforme configurado na LoadDatabaseDefault.java
 
 ### Como executar endpoints ?
 No client de sua preferência, estou utilizando o [insomnia](https://insomnia.rest/)
@@ -32,7 +34,7 @@ No client de sua preferência, estou utilizando o [insomnia](https://insomnia.re
 > **POST** **`http://localhost:8080/login`**
 ```json
 {
-	"username" : "luciano@email.com",
+	"username" : "luciano@fakeMail.com",
 	"password" : "12345"
 }
 ```

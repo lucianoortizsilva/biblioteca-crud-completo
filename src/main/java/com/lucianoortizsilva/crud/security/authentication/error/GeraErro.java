@@ -3,12 +3,15 @@ package com.lucianoortizsilva.crud.security.authentication.error;
 import static java.util.Objects.nonNull;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 
-import com.lucianoortizsilva.crud.exception.model.MensagemErroPadrao;
 import com.lucianoortizsilva.crud.util.JsonUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +23,6 @@ public abstract class GeraErro {
 	private HttpServletResponse response;
 	private HttpStatus httpStatus;
 	private String mensagemPadrao;
-	private String mensagemErroGerado;
 
 	protected GeraErro(final HttpServletResponse response, final HttpStatus httpStatus, final String mensagemPadrao) {
 		nonNull(response);
@@ -33,16 +35,15 @@ public abstract class GeraErro {
 
 	private void gerarErroCom(final String mensagem) {
 		try {
-			MensagemErroPadrao mensagemPadraoErro = MensagemErroPadrao
-					.builder()
-					.status(httpStatus.value())
-					.erro(httpStatus.name())
-					.mensagem(mensagem)
-					.build();
-			mensagemErroGerado = mensagemPadraoErro.getMensagem();
+			Map<String, Object> erro = new LinkedHashMap<>();
+			erro.put("timestamp", LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+			erro.put("datetime", LocalDateTime.now().toString());
+			erro.put("status", httpStatus.value());
+			erro.put("erro", httpStatus.name());
+			erro.put("mensagem", mensagem);
 			response.setStatus(httpStatus.value());
 			response.setContentType("application/json;charset=UTF-8");
-			final String json = JsonUtil.convertToJson(mensagemPadraoErro);
+			final String json = JsonUtil.convertToJson(erro);
 			response.getOutputStream().write(json.getBytes(StandardCharsets.UTF_8));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -55,10 +56,6 @@ public abstract class GeraErro {
 	
 	protected void comMensagemPadrao() {
 		gerarErroCom(mensagemPadrao);
-	}
-
-	protected String getMensagemErroGerado() {
-		return mensagemErroGerado;
 	}
 
 }

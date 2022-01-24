@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.exception.interceptor;
+package com.lucianoortizsilva.crud.exception;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -8,8 +8,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.lucianoortizsilva.crud.exception.DadoDuplicadoException;
-import com.lucianoortizsilva.crud.exception.model.MensagemErroPadrao;
+import com.lucianoortizsilva.crud.exception.dto.MensagemErroPadrao;
 
 @ControllerAdvice
 class Status400ControllerAdvice {

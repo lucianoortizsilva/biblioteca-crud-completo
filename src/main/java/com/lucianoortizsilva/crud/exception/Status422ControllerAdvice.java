@@ -1,4 +1,4 @@
-package com.lucianoortizsilva.crud.exception.interceptor;
+package com.lucianoortizsilva.crud.exception;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,8 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.lucianoortizsilva.crud.exception.model.MensagemErroPadrao;
-import com.lucianoortizsilva.crud.exception.model.ValidaErro;
+import com.lucianoortizsilva.crud.exception.dto.MensagemErroPadrao;
+import com.lucianoortizsilva.crud.exception.dto.MensagemMultiErro;
 
 @ControllerAdvice
 class Status422ControllerAdvice {
@@ -19,11 +19,11 @@ class Status422ControllerAdvice {
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<MensagemErroPadrao> validation(final MethodArgumentNotValidException e, final HttpServletRequest request) {
-		final ValidaErro validaErro = new ValidaErro(HTTP_STATUS.value(), HTTP_STATUS.getReasonPhrase(), e.getMessage(), request.getRequestURI());
+		final MensagemMultiErro mensagemMultiErro = new MensagemMultiErro(HTTP_STATUS.value(), HTTP_STATUS.getReasonPhrase(), e.getMessage(), request.getRequestURI());
 		for (final FieldError fe : e.getBindingResult().getFieldErrors()) {
-			validaErro.addErro(fe.getField(), fe.getDefaultMessage());
+			mensagemMultiErro.addErro(fe.getField(), fe.getDefaultMessage());
 		}
-		return ResponseEntity.status(HTTP_STATUS).body(validaErro);
+		return ResponseEntity.status(HTTP_STATUS).body(mensagemMultiErro);
 	}
 
 }

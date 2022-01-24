@@ -1,5 +1,10 @@
 package com.lucianoortizsilva.crud.exception;
 
+/**
+ * 
+ * HTTP 404
+ *
+ */
 public class NaoEncontradoException extends RuntimeException {
 
 	private static final long serialVersionUID = -8979247949102244261L;
