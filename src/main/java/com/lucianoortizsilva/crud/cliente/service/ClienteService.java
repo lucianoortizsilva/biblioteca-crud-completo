@@ -1,8 +1,12 @@
 package com.lucianoortizsilva.crud.cliente.service;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,12 +18,21 @@ import com.lucianoortizsilva.crud.cliente.repository.ClienteRepository;
 
 import lombok.AllArgsConstructor;
 
+//@formatter:off
 @Service
 @AllArgsConstructor
 public class ClienteService {
 
 	private ModelMapper modelMapper;
 	private ClienteRepository clienteRepository;
+	
+	public Page<Cliente> findAll(final String nome, final int page, final int size) {
+		if (isEmpty(nome)) {
+			return clienteRepository.findAll(PageRequest.of(page, size));
+		} else {
+			return clienteRepository.findByNomeContaining(nome, PageRequest.of(page, size));
+		}
+	}
 
 	@Transactional
 	public Cliente insert(final Cliente entity) {
@@ -31,8 +44,6 @@ public class ClienteService {
 		}
 	}
 
-	
-	
 	@Transactional
 	public void delete(final Long id) {
 		final Optional<Cliente> cliente = this.clienteRepository.findById(id);
@@ -43,8 +54,6 @@ public class ClienteService {
 		}
 	}
 
-	
-	
 	public Cliente findById(final Long id) {
 		Optional<Cliente> cliente = clienteRepository.findById(id);
 		if (cliente.isPresent()) {
@@ -54,8 +63,6 @@ public class ClienteService {
 		}
 	}
 
-	
-	
 	@Transactional
 	public void update(final ClienteDTO dto) {
 		final Optional<Cliente> cliente = this.clienteRepository.findById(dto.getId());
@@ -67,8 +74,6 @@ public class ClienteService {
 		}
 	}
 
-	
-	
 	private void validarCpfDuplicadoAoAtualizarDadosCliente(final ClienteDTO dto) {
 		final Optional<Cliente> clienteCadastrado = this.clienteRepository.findByCpf(dto.getCpf());
 		if (clienteCadastrado.isPresent()) {
@@ -80,8 +85,6 @@ public class ClienteService {
 		}
 	}
 
-	
-	
 	public Cliente convertToEntity(final ClienteDTO dto) {
 		return modelMapper.map(dto, Cliente.class);
 	}

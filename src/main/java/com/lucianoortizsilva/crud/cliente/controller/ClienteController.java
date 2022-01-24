@@ -4,6 +4,8 @@ import java.net.URI;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -23,6 +26,7 @@ import com.lucianoortizsilva.crud.cliente.service.ClienteService;
 
 import lombok.AllArgsConstructor;
 
+//@formatter:off
 @RestController
 @AllArgsConstructor
 @PreAuthorize("isAuthenticated()")
@@ -31,6 +35,17 @@ public class ClienteController {
 
 	private ClienteService clienteService;
 
+	@PreAuthorize("permitAll")
+	@GetMapping(value = "/pageable")
+	public ResponseEntity<Page<Cliente>> getAllClientes(
+			@RequestParam(required = false, name = "nome") String nome,
+			@RequestParam(required = false, defaultValue = "0") int page, 
+			@RequestParam(required = false, defaultValue = "5") int size) {
+		return new ResponseEntity<>(clienteService.findAll(nome, page, size), HttpStatus.OK);
+	}
+
+	
+	
 	@PostMapping
 	@PreAuthorize("permitAll")
 	public ResponseEntity<Void> insert(@RequestBody @Valid final ClienteDTO dto) {
