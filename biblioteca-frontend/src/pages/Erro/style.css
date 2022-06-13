@@ -1,0 +1,22 @@
+.pnl-erro {
+    margin: 0 auto;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;    
+}
+
+.pnl-erro img {
+    border-radius: 8px;
+    max-width: 100%;
+    max-height: 340px;
+    object-fit: cover;
+}
+
+.pnl-erro h2 {
+    margin: auto;
+}
+
+.pnl-erro a {
+    margin: auto;
+}

@@ -1,0 +1,17 @@
+.container form {
+    align-items: center;
+    align-content: center;
+  }
+  
+  .container form button {
+      margin-top: 30px;
+      min-width: 100%;
+      text-decoration: none;
+      color:#000;
+      transition: all 0.5s;
+      font-weight: bold;
+  }
+  
+  .container form button:hover{
+    color: #FFF;
+  }
