@@ -154,7 +154,7 @@
 	</dependencyManagement>
 
 	<build>
-		<finalName>${projects.artifactId}</finalName>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -168,5 +168,25 @@
 			</resource>
 		</resources>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>localhost</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<spring.profiles.active>localhost</spring.profiles.active>
+				<tag.version>${projects.version}</tag.version>
+			</properties>
+		</profile>
+		<profile>
+			<id>docker</id>
+			<properties>
+				<spring.profiles.active>docker</spring.profiles.active>
+				<tag.version>${projects.version}</tag.version>
+			</properties>
+		</profile>
+	</profiles>
 
 </project>

@@ -3,6 +3,7 @@ package com.biblioteca.config;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +42,9 @@ public class WebSecurityConfigurerCustom extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private UserService userService;
+	
+	@Value("${app.frontend-url}")
+	private String frontendUrl;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -58,8 +62,9 @@ public class WebSecurityConfigurerCustom extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
-		final CorsConfiguration corsConfiguration = new CorsConfiguration();
+		final CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
 		corsConfiguration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "OPTIONS"));
+		corsConfiguration.setAllowedOrigins(Arrays.asList(this.frontendUrl));
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", corsConfiguration);
 		return source;

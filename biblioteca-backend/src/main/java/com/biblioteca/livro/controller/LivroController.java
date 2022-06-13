@@ -38,10 +38,10 @@ public class LivroController {
 	@PreAuthorize("permitAll")
 	@GetMapping(value = "/pageable")
 	public ResponseEntity<Page<Livro>> getAllLivros(
-			@RequestParam(required = false, name = "nome") String nome,
+			@RequestParam(required = false, name = "descricao") String descricao,
 			@RequestParam(required = false, defaultValue = "0") int page, 
 			@RequestParam(required = false, defaultValue = "5") int size) {
-		return new ResponseEntity<>(livroService.findAll(nome, page, size), HttpStatus.OK);
+		return new ResponseEntity<>(livroService.findAll(descricao, page, size), HttpStatus.OK);
 	}
 
 	

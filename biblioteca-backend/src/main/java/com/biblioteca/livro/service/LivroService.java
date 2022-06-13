@@ -26,11 +26,11 @@ public class LivroService {
 	private ModelMapper modelMapper;
 	private LivroRepository livroRepository;
 	
-	public Page<Livro> findAll(final String nome, final int page, final int size) {
-		if (isEmpty(nome)) {
+	public Page<Livro> findAll(final String descricao, final int page, final int size) {
+		if (isEmpty(descricao)) {
 			return livroRepository.findAll(PageRequest.of(page, size));
 		} else {
-			return livroRepository.findByDescricaoContaining(nome, PageRequest.of(page, size));
+			return livroRepository.findByDescricaoContaining(descricao, PageRequest.of(page, size));
 		}
 	}
 
