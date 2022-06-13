@@ -6,16 +6,18 @@ function Cabecalho(){
         return (
             <div>
                 <Navbar bg="dark" variant="dark">
-                <Container>
                     <Navbar.Brand>
-                    <img src={logo} className="d-inline-block align-top" height="40" width="45"/>
+                        <img src={logo} className="d-inline-block align-top" height="40" width="45"/>
                     </Navbar.Brand>
+                    <Navbar.Text className="mt-1"><h5>BIBLIOTECA</h5></Navbar.Text>
                     <Nav className="me-auto">
-                        <Navbar.Text className="mt-1">
-                            <h5>Biblioteca</h5>                            
-                        </Navbar.Text>                    
+                        <Nav.Item>
+                            <Nav.Link href="/">HOME</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link href="/livros">LIVROS</Nav.Link>
+                        </Nav.Item>
                     </Nav>
-                </Container>
                 </Navbar>                
             </div>
         )
