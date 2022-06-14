@@ -1,0 +1,16 @@
+.carregando {
+    margin-top: 15%;
+    margin-left: 15%;
+}
+
+.carregando .spinner {
+    margin-top: 25px;    
+    margin-left: 3%;
+}
+
+.carregando span {
+    font-weight: bolder;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: x-large;
+    margin-left: 1%;
+}

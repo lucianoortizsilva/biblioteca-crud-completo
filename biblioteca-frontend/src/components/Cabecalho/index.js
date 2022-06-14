@@ -1,4 +1,4 @@
-import { Container, Navbar, Nav } from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 import logo from '../../assets/logo.png'
 import '../Cabecalho/style.css'
 
