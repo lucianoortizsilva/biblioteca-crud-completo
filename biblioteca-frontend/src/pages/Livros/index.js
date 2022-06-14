@@ -3,6 +3,7 @@ import { Table } from 'react-bootstrap';
 import { Link  } from 'react-router-dom';
 import Carregando from '../../components/Carregando'
 import {ApiLivros} from '../../services/api'
+import { FaEdit } from 'react-icons/fa';
 import '../../pages/Livros/style.css'
 
 function Livros(){
@@ -30,7 +31,7 @@ function Livros(){
         if(livros.length === 0){
             loadLivros();
         }
-    }, 3000)
+    }, 1500)
   })
 
 
@@ -52,8 +53,12 @@ function Livros(){
                     <tr key={livro.id}>
                         <td>{livro.isbn}</td>
                         <td>{livro.descricao}</td>
-                        <td>{livro.autor}</td>
-                        <td><Link to={`/livro/${livro.id}`}>editar</Link></td>
+                        <td>{livro.autor}</td>                        
+                        <td>
+                            <Link to={`/livro/${livro.id}`}>
+                                <FaEdit key={livro.id} title="Editar"/>
+                            </Link>
+                        </td>
                     </tr>                            
                 )
             })
