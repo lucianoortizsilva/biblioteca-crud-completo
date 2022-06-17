@@ -3,7 +3,6 @@ import erro from '../../assets/erro.png'
 import { Link, useNavigate  } from 'react-router-dom';
 import '../Erro/style.css'
 
-
 function Erro() {
 
     const navigate = useNavigate();

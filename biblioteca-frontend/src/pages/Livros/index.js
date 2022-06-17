@@ -2,37 +2,37 @@ import React, {useState, useEffect} from 'react';
 import { Table } from 'react-bootstrap';
 import { Link  } from 'react-router-dom';
 import Carregando from '../../components/Carregando'
-import {ApiLivros} from '../../services/api'
+import {ApiBackend} from '../../services/api'
 import { FaEdit } from 'react-icons/fa';
 import '../../pages/Livros/style.css'
 
 function Livros(){
 
-  const [carregando, setCarregando] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [livros, setLivros] = useState([]);
-        
+
 
 
   useEffect(()=> {
-    async function loadLivros(){
-        await ApiLivros.get(`/pageable`)
-        .then(function(response) {
-                console.log(response.data.content);
-                setLivros(response.data.content);
-                setCarregando(false);
-            })
-        .catch(function(error){
-            console.log(error);
-            setCarregando(false);
-        });
-    }
-    // ADD TIMEOUT FAKE
-    setTimeout(()=>{
-        if(livros.length === 0){
-            loadLivros();
-        }
-    }, 1500)
+    buscarLivros();
   })
+
+
+
+  async function buscarLivros() {      
+    await ApiBackend.get(`/livros/pageable`)
+      .then(function(response) {
+        if (livros.length === 0) {
+          console.log(response.data.content);
+          setLivros(response.data.content);
+          setLoading(false);
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+        setLoading(false);
+      });
+  }
 
 
 
@@ -69,8 +69,8 @@ function Livros(){
 
 
 
-  if(carregando) {
-    return(<Carregando descricao="Livros" carregando={carregando}/>)
+  if(loading) {
+    return(<Carregando descricao="Livros" carregando={loading}/>)
   } else {
     return(
         <div className='mt-5'>
@@ -82,3 +82,4 @@ function Livros(){
 }
 
 export default Livros;
+

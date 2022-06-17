@@ -1,13 +1,11 @@
 import '../Home/style.css';
 
 function Home() {
-    
-    return(
-        <div className='mt-5'>
-            <h3>HOME</h3>
-        </div>
+    return(        
+        <>
+         <h3>HOME</h3>
+        </>
     )
-
 }
 
 export default Home;
