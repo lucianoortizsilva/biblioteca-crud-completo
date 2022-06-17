@@ -39,7 +39,13 @@ function AutenticacaoProvider({ children }) {
     .catch(error => {
       setLogado(false);    
       setToken(null);
-      toast.error(error.response.data.mensagem);
+      if('ERR_NETWORK' === error.code){
+        toast.error('Indisponível! Tente mais tarde');
+      } else if('ERR_BAD_REQUEST' === error.code){
+        toast.error(error.response.data.mensagem);
+      } else {
+        toast.error('Erro inesperado!');
+      }
     })
     .finally(()=>{
       setAutenticando(false);

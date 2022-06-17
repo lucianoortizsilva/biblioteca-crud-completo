@@ -3,6 +3,7 @@ import { Navbar, Nav } from 'react-bootstrap';
 import { useContext, useEffect, useState } from 'react';
 import logo from '../../assets/logo.png'
 import '../Cabecalho/style.css'
+import { AiOutlinePoweroff } from 'react-icons/ai'
 
 function Cabecalho() {
         
@@ -29,6 +30,7 @@ function Cabecalho() {
                         <img src={logo} className="d-inline-block align-top" height="40" width="45"/>
                     </Navbar.Brand>
                     <Navbar.Text className="mt-1"><h5>BIBLIOTECA</h5></Navbar.Text>
+                    
                     <Nav className="me-auto">
                         <Nav.Item>
                             <Nav.Link href="/home">HOME</Nav.Link>
@@ -36,8 +38,13 @@ function Cabecalho() {
                         <Nav.Item>
                             <Nav.Link href="/livros">LIVROS</Nav.Link>
                         </Nav.Item>
+                    </Nav>
+                    
+                    <Nav className="collapse navbar-collapse justify-content-end">
                         <Nav.Item>
-                            <Nav.Link onClick={submitSair}>sair</Nav.Link>
+                            <Nav.Link onClick={submitSair}> 
+                                <AiOutlinePoweroff/>
+                            </Nav.Link>
                         </Nav.Item>
                     </Nav>
                 </Navbar>                

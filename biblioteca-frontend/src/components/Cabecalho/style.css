@@ -1,3 +1,20 @@
-.navbar-dark .navbar-text{
-    color: #fff!important;
+.navbar .navbar-text h5 {
+    color: #FA5858;
+}
+
+.navbar .navbar-nav .nav-item a {
+    color: #FFF;
+}
+
+.navbar .navbar-nav .nav-item a:hover {
+    color: #FFFF00;
+}
+
+.navbar .navbar-collapse .nav-item .nav-link  {
+    color: #F7FE2E;
+    font-size: x-large;
+}
+
+.navbar .navbar-collapse .nav-item .nav-link :hover {
+    color: #FE2E2E;    
 }

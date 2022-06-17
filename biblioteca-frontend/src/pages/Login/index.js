@@ -40,8 +40,8 @@ function Login() {
         </div>
         <form onSubmit={submitLogin}>
           <h1>Entrar</h1>
-          <input type="text" placeholder="email@email.com" value={email} onChange={ (e) => setEmail(e.target.value) } required/>
-          <input type="password" placeholder="*******" value={senha} onChange={(e) => setSenha(e.target.value) } required/>
+          <input type="text" placeholder="email@email.com" value={email} onChange={ (e) => setEmail(e.target.value) } disabled={autenticando} required/>
+          <input type="password" placeholder="*******" value={senha} onChange={(e) => setSenha(e.target.value) } disabled={autenticando} required/>
           <button type="submit">{autenticando ? 'Carregando...' : 'Acessar'}</button>
         </form>  
         <Link to="#">Criar uma conta</Link>
