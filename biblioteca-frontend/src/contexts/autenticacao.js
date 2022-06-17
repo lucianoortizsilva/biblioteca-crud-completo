@@ -55,6 +55,7 @@ function AutenticacaoProvider({ children }) {
 
 
   async function deslogar() {
+    console.log('deslogar ...');
     removeCookie('Authorization');
     removeCookie('Payload');
   }

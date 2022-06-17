@@ -5,9 +5,8 @@ function Livro() {
 
   return(
     <div>
-      <h2>Livro</h2>
       <span>
-        <h3>ID: {id}</h3>
+        <h3>LIVRO COM ID: {id}</h3>
       </span>
     </div>
   )
