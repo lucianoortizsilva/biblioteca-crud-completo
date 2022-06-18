@@ -139,7 +139,7 @@ class LivroServiceTest {
 		}
 		
 		@Test
-		@DisplayName("QUANDO tento atualizar um livro com ISBN de outro livro cadastrado ENTAO deveria lancar LivroComCpfDuplicadoException")
+		@DisplayName("QUANDO tento atualizar um livro com ISBN de outro livro cadastrado ENTAO deveria lancar LivroComIsbnDuplicadoException")
 		void update_deveRetornarIsbnDuplicadoException() {
 			when(livroRepository.findById(ENTITY_LIVRO_ALEATORIO.getId())).thenReturn(Optional.of(ENTITY_LIVRO_ALEATORIO));
 			when(livroRepository.findByIsbn(ENTITY_LIVRO_ALEATORIO.getIsbn())).thenReturn(Optional.of(ENTITY_LIVRO_ALEATORIO_MESMO_ISBN));

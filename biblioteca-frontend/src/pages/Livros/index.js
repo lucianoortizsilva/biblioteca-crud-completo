@@ -22,7 +22,6 @@ function Livros(){
 
 
   async function buscarLivros() {      
-    console.log('buscarLivros .........');
     await ApiBackend.get(`/livros/pageable`)
       .then(function(response) {
         console.log(JSON.stringify(response.data.content));

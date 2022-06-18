@@ -1,0 +1,24 @@
+.form-label {
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.form-label-id {
+    font-weight: 800;
+    font-size: xx-large;
+    color: #FE2E2E;
+}
+
+.livro form div input {
+    width: 500px;
+}
+
+.livro form div .nav-link {
+    font-size: x-large;
+    color: #32CD32;
+    padding: 0;
+}
+
+.react-datepicker__navigation-icon {
+    top: 19px !important;
+}

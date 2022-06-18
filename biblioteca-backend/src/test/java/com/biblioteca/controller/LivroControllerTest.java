@@ -174,8 +174,8 @@ class LivroControllerTest {
 		}
 		
 		@Test
-		@DisplayName("DADO QUE informo cpf null, QUANDO acesso POST /livros, ENTAO deveria retornar 422")
-		void insert_comCpfNull_deveRetornarUnprocessableEntity() throws Exception {
+		@DisplayName("DADO QUE informo isbn null, QUANDO acesso POST /livros, ENTAO deveria retornar 422")
+		void insert_comIsbnNull_deveRetornarUnprocessableEntity() throws Exception {
 			final LivroDTO dto = LivroDTO.builder().id(qualquerID()).isbn(null).descricao(qualquerDescricao()).dtLancamento(qualquerDate()).build();
 			when(livroRepository.save(any())).thenReturn(modelMapper.map(dto, Livro.class));
 			final String content = objectMapper.writeValueAsString(dto);
@@ -183,8 +183,8 @@ class LivroControllerTest {
 		}
 		
 		@Test
-		@DisplayName("DADO QUE informo cpf com MAX caracter excedido, QUANDO acesso POST /livros, ENTAO deveria retornar 422")
-		void insert_comCpfMaxCaractersExcedido_deveRetornarUnprocessableEntity() throws Exception {
+		@DisplayName("DADO QUE informo isbn com MAX caracter excedido, QUANDO acesso POST /livros, ENTAO deveria retornar 422")
+		void insert_comIsbnMaxCaractersExcedido_deveRetornarUnprocessableEntity() throws Exception {
 			final LivroDTO dto = LivroDTO.builder().id(qualquerID()).isbn(isbnMaxCaracterExcedido()).descricao(qualquerDescricao()).dtLancamento(qualquerDate()).build();
 			when(livroRepository.save(any())).thenReturn(modelMapper.map(dto, Livro.class));
 			final String content = objectMapper.writeValueAsString(dto);
