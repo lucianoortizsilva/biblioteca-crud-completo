@@ -29,6 +29,13 @@ function Livros(){
       })
       .catch(function(error) {
         console.log(JSON.stringify(error));
+        if(error.code === 'ERR_NETWORK'){
+          toast.error('Indisponível! Tente mais tarde');
+        } else if(error.response.data.status >= 400 && error.response.data.status <= 500) {
+          toast.error(error.response.data.mensagem);
+        } else {
+          toast.error('Erro inesperado!');
+        }
       })
       .finally(()=>{
         setLoading(false);

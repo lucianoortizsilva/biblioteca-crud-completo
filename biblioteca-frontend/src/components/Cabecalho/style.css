@@ -2,17 +2,13 @@
     color: #FA5858;
 }
 
-.navbar .navbar-nav .nav-item a {
+.navbar .navbar-collapse .nav-item .nav-link  {
     color: #FFF;
+    font-size: x-large;
 }
 
 .navbar .navbar-nav .nav-item a:hover {
-    color: #FFFF00;
-}
-
-.navbar .navbar-collapse .nav-item .nav-link  {
     color: #F7FE2E;
-    font-size: x-large;
 }
 
 .navbar .navbar-collapse .nav-item .nav-link :hover {

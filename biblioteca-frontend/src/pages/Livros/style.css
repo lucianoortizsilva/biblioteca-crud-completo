@@ -1,6 +1,11 @@
+table tbody tr td {
+    vertical-align: baseline;
+}
+
 table tbody tr td a {
     margin-right: 10px;
     cursor: pointer;
+    font-size: x-large;
 }
 
 table tbody tr td .btn-delete {
