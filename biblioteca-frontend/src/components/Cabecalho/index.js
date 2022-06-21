@@ -2,10 +2,10 @@ import { AutenticacaoContext } from '../../contexts/autenticacao';
 import { Navbar, Nav } from 'react-bootstrap';
 import { useContext } from 'react';
 import logo from '../../assets/logo.png'
-import './cabecalho.css'
 import { AiOutlinePoweroff } from 'react-icons/ai'
+import './cabecalho.css'
 
-function Cabecalho({hiddenMenu}) {
+function Cabecalho() {
         
     const { deslogar } = useContext(AutenticacaoContext);
 
@@ -19,7 +19,7 @@ function Cabecalho({hiddenMenu}) {
         
     return (
         <div>
-            <Navbar bg="dark" variant="dark" hidden={hiddenMenu}>
+            <Navbar bg="dark" variant="dark">
                 
                 <Navbar.Brand>
                     <img src={logo} className="d-inline-block align-top" height="40" width="45" alt='logo'/>

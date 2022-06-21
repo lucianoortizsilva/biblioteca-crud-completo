@@ -1,7 +1,7 @@
 import { Spinner } from 'react-bootstrap';
 import './carregando.css'
 
-function Carregando({descricao, carregando}){
+function Carregando({carregando}){
     return (
         <div className='carregando'>
             <Spinner animation='grow' className={carregando ? 'spinner' : 'visually-hidden'} variant="danger"/>
@@ -9,7 +9,6 @@ function Carregando({descricao, carregando}){
             <Spinner animation='grow' className={carregando ? 'spinner' : 'visually-hidden'} variant="danger"/>
             <Spinner animation='grow' className={carregando ? 'spinner' : 'visually-hidden'} variant="danger"/>
             <Spinner animation='grow' className={carregando ? 'spinner' : 'visually-hidden'} variant="danger"/>
-            <span className={carregando ? '' : 'visually-hidden'}>Carregando {descricao} ...</span>
         </div>
     )
 }

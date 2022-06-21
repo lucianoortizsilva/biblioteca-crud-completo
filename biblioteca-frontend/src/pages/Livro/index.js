@@ -11,6 +11,7 @@ import pt from 'date-fns/locale/pt-BR';
 import './livro.css'
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
+import Cabecalho from '../../components/Cabecalho'
 
 registerLocale('pt-BR', pt)
 
@@ -139,6 +140,7 @@ function Livro() {
 
   return(
     <div className='livro'>
+      <Cabecalho/>
       <Titulo descricao={id ? 'Editar' : 'Novo'}>
         {
            id ? <FiEdit size={25}/> : <FiPlusCircle size={25}/>          

@@ -40,7 +40,7 @@ public class LivroController {
 	public ResponseEntity<Page<Livro>> getAllLivros(
 			@RequestParam(required = false, name = "descricao") String descricao,
 			@RequestParam(required = false, defaultValue = "0") int page, 
-			@RequestParam(required = false, defaultValue = "5") int size) {
+			@RequestParam(required = false, defaultValue = "2") int size) {
 		return new ResponseEntity<>(livroService.findAll(descricao, page, size), HttpStatus.OK);
 	}
 

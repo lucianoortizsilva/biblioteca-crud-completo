@@ -10,9 +10,11 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <AutenticacaoProvider>
-      <CookiesProvider/>
+    <CookiesProvider>
       <React.StrictMode>
         <App />
       </React.StrictMode>
-    </AutenticacaoProvider>  
+    </CookiesProvider>
+  </AutenticacaoProvider>  
+  
 );

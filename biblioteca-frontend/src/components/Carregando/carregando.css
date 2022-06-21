@@ -1,11 +1,9 @@
 .carregando {
-    margin-top: 15%;
-    margin-left: 15%;
+    text-align: center;
 }
 
 .carregando .spinner {
-    margin-top: 25px;    
-    margin-left: 3%;
+    margin-right: 2%;
 }
 
 .carregando span {
