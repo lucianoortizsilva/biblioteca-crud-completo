@@ -3,7 +3,7 @@ import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.png';
-import '../Login/style.css';
+import './login.css';
 
 
 function Login() {

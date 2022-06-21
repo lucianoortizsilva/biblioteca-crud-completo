@@ -2,7 +2,7 @@ import { AutenticacaoContext } from '../../contexts/autenticacao';
 import { Navbar, Nav } from 'react-bootstrap';
 import { useContext } from 'react';
 import logo from '../../assets/logo.png'
-import '../Cabecalho/style.css'
+import './cabecalho.css'
 import { AiOutlinePoweroff } from 'react-icons/ai'
 
 function Cabecalho({hiddenMenu}) {

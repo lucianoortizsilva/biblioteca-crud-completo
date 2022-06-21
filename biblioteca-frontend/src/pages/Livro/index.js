@@ -4,13 +4,13 @@ import { toast } from 'react-toastify';
 import { ApiBackend } from '../../services/api'
 import { AutenticacaoContext } from '../../contexts/autenticacao';
 import { FiPlusCircle, FiSave, FiEdit} from "react-icons/fi";
-import { Button, Link, Nav, Container, Form, FormGroup } from 'react-bootstrap';
+import { Nav, Container, Form, FormGroup } from 'react-bootstrap';
 import DatePicker, { registerLocale } from "react-datepicker";
+import Titulo from '../../components/Titulo';
+import pt from 'date-fns/locale/pt-BR';
+import './livro.css'
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
-import './livro.css'
-import pt from 'date-fns/locale/pt-BR';
-import Titulo from '../../components/Titulo';
 
 registerLocale('pt-BR', pt)
 

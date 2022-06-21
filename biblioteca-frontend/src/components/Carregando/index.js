@@ -1,5 +1,5 @@
 import { Spinner } from 'react-bootstrap';
-import '../Carregando/style.css'
+import './carregando.css'
 
 function Carregando({descricao, carregando}){
     return (

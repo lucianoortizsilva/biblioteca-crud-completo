@@ -1,8 +1,8 @@
 import Carregando from '../../components/Carregando'
-import {useContext, useState, useEffect} from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { ApiBackend } from '../../services/api'
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
-import { FiEdit, FiList } from "react-icons/fi";
+import { FiList } from "react-icons/fi";
 import { AutenticacaoContext } from '../../contexts/autenticacao';
 import { Table, Button } from 'react-bootstrap';
 import { Link, useNavigate  } from 'react-router-dom';
