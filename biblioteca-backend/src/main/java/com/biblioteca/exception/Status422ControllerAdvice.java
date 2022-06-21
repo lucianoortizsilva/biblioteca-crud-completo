@@ -19,7 +19,7 @@ class Status422ControllerAdvice {
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<MensagemErroPadrao> validation(final MethodArgumentNotValidException e, final HttpServletRequest request) {
-		final MensagemMultiErro mensagemMultiErro = new MensagemMultiErro(HTTP_STATUS.value(), HTTP_STATUS.getReasonPhrase(), e.getMessage(), request.getRequestURI());
+		final MensagemMultiErro mensagemMultiErro = new MensagemMultiErro(HTTP_STATUS.value(), HTTP_STATUS.getReasonPhrase(), "", request.getRequestURI());
 		for (final FieldError fe : e.getBindingResult().getFieldErrors()) {
 			mensagemMultiErro.addErro(fe.getField(), fe.getDefaultMessage());
 		}

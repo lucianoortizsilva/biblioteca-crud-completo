@@ -1,0 +1,30 @@
+table tbody tr td {
+    vertical-align: baseline;
+}
+
+table tbody tr td a {
+    margin-right: 10px;
+    cursor: pointer;
+    font-size: x-large;
+}
+
+table tbody tr td .btn-delete {
+    color: #FF6347;
+}
+
+.botoes {
+    margin: 5px;
+    margin-bottom: 65px;
+}
+
+.botoes button {
+    min-width: 120px;
+    float: right;
+}
+
+.botoes button:hover  {
+    opacity: 1;
+    font-style: italic;
+    font-weight: bold;
+    transform: scale(1.1);
+}

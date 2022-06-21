@@ -49,7 +49,7 @@ function Cabecalho({hiddenMenu}) {
                 
                 <Nav className="collapse navbar-collapse justify-content-end">
                     <Nav.Item>
-                        <Nav.Link onClick={submitSair}> 
+                        <Nav.Link className='btn-sair' onClick={submitSair}> 
                             <AiOutlinePoweroff/>
                         </Nav.Link>
                     </Nav.Item>

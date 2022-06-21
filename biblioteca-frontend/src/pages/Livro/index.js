@@ -3,13 +3,14 @@ import { useContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { ApiBackend } from '../../services/api'
 import { AutenticacaoContext } from '../../contexts/autenticacao';
-import { FiSave } from "react-icons/fi";
+import { FiPlusCircle, FiSave, FiEdit} from "react-icons/fi";
 import { Button, Link, Nav, Container, Form, FormGroup } from 'react-bootstrap';
 import DatePicker, { registerLocale } from "react-datepicker";
-import '../../pages/Livro/style.css'
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
+import './livro.css'
 import pt from 'date-fns/locale/pt-BR';
+import Titulo from '../../components/Titulo';
 
 registerLocale('pt-BR', pt)
 
@@ -23,9 +24,14 @@ function Livro() {
   const [descricao, setDescricao] = useState('');
   const [dtLancamento, setDtLancamento] = useState(new Date());
   
-  useEffect(()=>{
-    buscarLivroPoId();
+  useEffect(()=> {
+    if (id) {
+      buscarLivroPoId();
+    } else {
+      console.log('SEM ID: ' + id);
+    }
   },[])
+
 
 
   async function buscarLivroPoId() {
@@ -48,6 +54,7 @@ function Livro() {
           toast.warn(error.response.data.mensagem);
           deslogar();
         } else if(error.response.data.status >= 400 && error.response.data.status <= 500) {
+          console.log('Opa: ' + JSON.stringify(error));
           toast.error(error.response.data.mensagem);
         } else {
           toast.error('Erro inesperado!');
@@ -59,21 +66,55 @@ function Livro() {
   }
 
 
-  async function salvar(event) {
-    event.preventDefault();    
-    
+
+  function salvar(event) {
+    event.preventDefault();        
     const body = {
       'isbn' : isbn,
       'descricao' : descricao,
       'autor' : autor,
       'dtLancamento' : dtLancamento
-    };
-    
-    const header = {
-      headers: { 'Authorization': token, 
-                 'Content-Type' : 'application/json'
-               }
-    };
+    };    
+    const header = {headers: { 'Authorization': token,'Content-Type' : 'application/json'}};    
+    if(id){
+      update(body, header);
+    } else {
+      post(body, header);
+    }    
+  }
+  
+
+
+  async function post(body, header)  {
+    await ApiBackend.post(`/livros`, JSON.stringify(body), header)
+    .then(response => {
+      console.log(JSON.stringify(response));
+      toast.success('Salvou com sucesso!');
+    })
+    .catch(error => {
+      console.log(JSON.stringify(error));
+      if(error.code === 'ERR_NETWORK'){
+        toast.error('Indisponível! Tente mais tarde');
+      } else if(401 === error.response.data.status){
+        toast.warn(error.response.data.mensagem);
+        deslogar();
+      } else if(error.response.data.status >= 400 && error.response.data.status <= 500) {
+        if(error.response.data.erros){
+          error.response.data.erros.map(erro => {
+            toast.error(erro.campo + ': ' + erro.mensagem);
+          })
+        } else{
+          toast.error(error.response.data.mensagem);
+        }
+      } else {
+        toast.error('Erro inesperado!');
+      }
+    });
+  }
+
+
+
+  async function update(body, header)  {
     await ApiBackend.put(`/livros/${id}`, JSON.stringify(body), header)
     .then(response => {
       console.log(JSON.stringify(response));
@@ -91,9 +132,6 @@ function Livro() {
       } else {
         toast.error('Erro inesperado!');
       }
-    })
-    .finally(()=>{
-      
     });
   }
 
@@ -101,6 +139,11 @@ function Livro() {
 
   return(
     <div className='livro'>
+      <Titulo descricao={id ? 'Editar' : 'Novo'}>
+        {
+           id ? <FiEdit size={25}/> : <FiPlusCircle size={25}/>          
+        }
+      </Titulo>
       <Container className='mt-5'>
         <Form onSubmit={salvar}>
           <Form.Group controlId="id">

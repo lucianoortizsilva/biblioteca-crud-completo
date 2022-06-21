@@ -2,18 +2,20 @@ import Carregando from '../../components/Carregando'
 import {useContext, useState, useEffect} from 'react';
 import { ApiBackend } from '../../services/api'
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { FiEdit, FiList } from "react-icons/fi";
 import { AutenticacaoContext } from '../../contexts/autenticacao';
-import { Table } from 'react-bootstrap';
-import { Link  } from 'react-router-dom';
+import { Table, Button } from 'react-bootstrap';
+import { Link, useNavigate  } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import '../../pages/Livros/style.css'
+import Titulo from '../../components/Titulo';
+import './livros.css'
 
-function Livros(){
+function Livros() {
 
   const [loading, setLoading] = useState(true);
   const [livros, setLivros] = useState([]);
   const { token, deslogar } = useContext(AutenticacaoContext);
-
+  const navigate = useNavigate();
 
   useEffect(()=> {
     buscarLivros();
@@ -102,20 +104,44 @@ function Livros(){
   );
 
 
+  function cadastrar(){
+    navigate("/livro",{ replace: true });
+  }
+  
+  
+  const BOTAO_NOVO = (
+    <div className='botoes'>
+      <Button variant="primary" size="sm" onClick={cadastrar}>NOVO</Button>
+    </div>
+  )
 
-  if(loading) {
-    return(<Carregando descricao="Livros" carregando={loading}/>)
-  } else if(livros.length === 0){
+  if(loading) {    
     return(
-          <div>
-            <h3>SEM REGISTROS</h3>
-          </div>
-          )  
-  } else {
-    return(<div>{TABLE_LIVROS}</div>)
+    <>
+      {BOTAO_NOVO}
+      <Carregando descricao="Livros" carregando={loading}/>
+    </>)
+  } else if(livros.length === 0){    
+    return(
+    <>
+      <Titulo descricao="Livros">
+        <FiList size={25}/>
+      </Titulo>
+      {BOTAO_NOVO}
+      <h3>SEM REGISTROS</h3>
+    </>)
+  } else {    
+    return(
+    <>
+      <Titulo descricao="Livros">
+        <FiList size={25}/>
+      </Titulo>
+      {BOTAO_NOVO}
+      {TABLE_LIVROS}
+    </>
+    )
   }
 
 }
 
 export default Livros;
-
