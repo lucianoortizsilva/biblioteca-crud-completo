@@ -3,13 +3,9 @@ table tbody tr td {
 }
 
 table tbody tr td a {
-    margin-right: 10px;
+    margin-left: 10px;
     cursor: pointer;
     font-size: x-large;
-}
-
-table tbody tr td .btn-delete {
-    color: #FF6347;
 }
 
 .botoes {

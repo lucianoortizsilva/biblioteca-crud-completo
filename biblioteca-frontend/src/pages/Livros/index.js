@@ -2,7 +2,7 @@ import Carregando from '../../components/Carregando'
 import Cabecalho from '../../components/Cabecalho'
 import { useContext, useState, useEffect, useMemo } from 'react';
 import { ApiBackend } from '../../services/api'
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { GrView } from 'react-icons/gr';
 import { FiList } from "react-icons/fi";
 import { CgSearchLoading } from "react-icons/cg"
 import { AutenticacaoContext } from '../../contexts/autenticacao';
@@ -32,7 +32,7 @@ function Livros() {
     return(()=> {
       setTimeout(()=> {
         buscarLivros();
-      }, 2000)
+      }, 1000)
     })      
   }, [])
   
@@ -42,7 +42,7 @@ function Livros() {
     setLoading(true);
     setTimeout(()=> {
       buscarLivros();
-    }, 2000)
+    }, 1000)
   }
   
 
@@ -85,29 +85,6 @@ function Livros() {
     
     
     
-  async function deletar(id) {
-    await ApiBackend.delete(`/livros/${id}`,{headers:{"Authorization": token}})
-    .then(function(response) {
-      console.log(JSON.stringify(response));
-      setLivros(livros.filter(item => item.id !== id));
-      toast.success('Removido com sucesso!');
-    })
-    .catch(function(error) {
-      if(error.code === 'ERR_NETWORK'){
-        toast.error('Indisponível! Tente mais tarde');
-      } else if(401 === error.response.data.status){
-        toast.warn(error.response.data.mensagem);
-        deslogar();
-      } else if(error.response.data.status >= 400 && error.response.data.status <= 500) {
-        toast.error(error.response.data.mensagem);
-      } else {
-        toast.error('Erro inesperado!');
-      }
-    });
-  }
-
-
-
   function cadastrar(e){
     e.preventDefault();   
     navigate("/livro",{ replace: true });
@@ -155,7 +132,7 @@ function Livros() {
                 <th>ISBN</th>
                 <th>DESCRIÇÃO</th>
                 <th>AUTOR</th>
-                <th>OPÇÕES</th>                
+                <th></th>                
             </tr>
         </thead>            
         <tbody>
@@ -168,11 +145,8 @@ function Livros() {
                         <td>{livro.autor}</td>                        
                         <td>
                             <Link className='btn-edit' to={`/livro/${livro.id}`}>
-                                <FaEdit key={livro.id} title="Editar"/>
+                                <GrView key={livro.id} title="Visualizar"/>
                             </Link>
-                            <a className='btn-delete' onClick={()=> deletar(livro.id)}>
-                              <FaTrashAlt key={livro.id} title="Deletar"/>
-                            </a>
                         </td>
                     </tr>                            
                 )

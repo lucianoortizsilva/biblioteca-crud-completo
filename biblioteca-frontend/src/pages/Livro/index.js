@@ -1,9 +1,11 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react'; 
 import { toast } from 'react-toastify';
 import { ApiBackend } from '../../services/api'
 import { AutenticacaoContext } from '../../contexts/autenticacao';
 import { FiPlusCircle, FiSave, FiEdit} from "react-icons/fi";
+import { FaTrashAlt } from 'react-icons/fa';
+import { GrView } from 'react-icons/gr';
 import { Nav, Container, Form, FormGroup } from 'react-bootstrap';
 import DatePicker, { registerLocale } from "react-datepicker";
 import Titulo from '../../components/Titulo';
@@ -12,24 +14,30 @@ import './livro.css'
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 import Cabecalho from '../../components/Cabecalho'
-
 registerLocale('pt-BR', pt)
 
 function Livro() {
   
   const {id} = useParams();
   const [loading, setLoading] = useState(true);
+  const [editando, setEditando] = useState(false);
+  const [removido, setRemovido] = useState(false);
   const {token, deslogar } = useContext(AutenticacaoContext);
+  
+  const [codigo, setCodigo] = useState('');
   const [isbn, setIsbn] = useState('');
   const [autor, setAutor] = useState('');
   const [descricao, setDescricao] = useState('');
   const [dtLancamento, setDtLancamento] = useState(new Date());
   
+  const navigate = useNavigate();
+  
   useEffect(()=> {
     if (id) {
+      setCodigo(id);
       buscarLivroPoId();
     } else {
-      console.log('SEM ID: ' + id);
+      setEditando(true);
     }
   },[])
 
@@ -133,7 +141,38 @@ function Livro() {
       } else {
         toast.error('Erro inesperado!');
       }
+    })
+    .finally(()=>{
+      setEditando(false);
     });
+  }
+
+
+
+  async function deletar() {
+    setLoading(true);
+    await ApiBackend.delete(`/livros/${id}`,{headers:{"Authorization": token}})
+    .then(function(response) {
+      console.log(JSON.stringify(response));
+      setRemovido(true);
+      toast.success('Removido com sucesso!');
+      navigate("/livros",{ replace: true });
+    })
+    .catch(function(error) {
+      if(error.code === 'ERR_NETWORK'){
+        toast.error('Indisponível! Tente mais tarde');
+      } else if(401 === error.response.data.status){
+        toast.warn(error.response.data.mensagem);
+        deslogar();
+      } else if(error.response.data.status >= 400 && error.response.data.status <= 500) {
+        toast.error(error.response.data.mensagem);
+      } else {
+        toast.error('Erro inesperado!');
+      }
+    })
+    .finally(()=>{
+      setLoading(false);
+    });;
   }
 
 
@@ -141,35 +180,70 @@ function Livro() {
   return(
     <div className='livro'>
       <Cabecalho/>
-      <Titulo descricao={id ? 'Editar' : 'Novo'}>
+      <Titulo descricao={id ? 'Livro' : 'Novo'}>
         {
-           id ? <FiEdit size={25}/> : <FiPlusCircle size={25}/>          
+           id && editando ? <FiEdit size={25}/> :
+           id && !editando ? <GrView size={25}/> : 
+           <FiPlusCircle size={25}/>
         }
       </Titulo>
       <Container className='mt-5'>
         <Form onSubmit={salvar}>
           <Form.Group controlId="id">
-            <Form.Label className='form-label-id'>{id}</Form.Label>
+            <Form.Label className='form-label-id'>{codigo}</Form.Label>
           </Form.Group>
+          
           <Form.Group controlId="dtLancamento">
             <Form.Label>DATA LANÇAMENTO</Form.Label>
-            <DatePicker className='form-control' locale={pt} selected={dtLancamento} onChange={(date) => setDtLancamento(date)} dateFormat="dd/MM/yyyy" required/>
+            <DatePicker className='form-control' 
+            locale={pt} 
+            selected={dtLancamento} 
+            onChange={(date) => setDtLancamento(date)} 
+            dateFormat="dd/MM/yyyy" 
+            disabled={!editando} 
+            readOnly={!editando}
+            required/>
           </Form.Group>
+
           <Form.Group controlId="isbn">
             <Form.Label>ISBN</Form.Label>
-            <Form.Control type="text" value={isbn} onChange={e => setIsbn(e.target.value)} required/>
+            <Form.Control type="text" 
+            value={isbn} 
+            onChange={e => setIsbn(e.target.value)} 
+            disabled={!editando} 
+            readOnly={!editando}
+            required/>
           </Form.Group>
+
           <Form.Group controlId="descricao">
             <Form.Label>DESCRIÇÃO</Form.Label>
-            <Form.Control type="text" value={descricao} onChange={e => setDescricao(e.target.value)} required/>
+            <Form.Control type="text" 
+            value={descricao} 
+            onChange={e => setDescricao(e.target.value)} 
+            disabled={!editando} 
+            readOnly={!editando}
+            required/>
           </Form.Group>
+
           <Form.Group controlId="autor">
             <Form.Label>AUTOR</Form.Label>
-            <Form.Control type="text" value={autor} onChange={e => setAutor(e.target.value)} required/>
+            <Form.Control type="text" 
+            value={autor} 
+            onChange={e => setAutor(e.target.value)} 
+            disabled={!editando} 
+            readOnly={!editando}
+            required/>
           </Form.Group>
+
           <FormGroup controlId='botoes'>
-            <Nav.Link onClick={salvar}> 
-              <FiSave title="Salvar"/>
+            <Nav.Link id='btn-save' onClick={salvar} disabled={!editando || removido} readOnly={!editando || removido} hidden={!editando}>
+              <FiSave title="Salvar" disabled={!editando || removido} readOnly={!editando || removido}/>
+            </Nav.Link>
+            <Nav.Link id='btn-edit' onClick={()=> setEditando(true)} disabled={editando || removido} readOnly={editando || removido} hidden={editando}>
+              <FiEdit title="Editar" disabled={editando || removido} readOnly={editando || removido}/>              
+            </Nav.Link>
+            <Nav.Link id='btn-delete' onClick={()=> deletar()} disabled={removido} readOnly={removido}>
+              <FaTrashAlt title="Deletar" disabled={removido} readOnly={removido}/>
             </Nav.Link>
           </FormGroup>
         </Form>

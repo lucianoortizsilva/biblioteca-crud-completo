@@ -14,10 +14,23 @@
 }
 
 .livro form div .nav-link {
+    display: inline-table;
     font-size: x-large;
-    color: #32CD32;
     padding: 0;
     max-width: 27px;
+    margin-right: 10px;
+}
+
+.livro form div #btn-save {
+    color: #32CD32;
+}
+
+.livro form div #btn-edit {
+    color: #9932CC;
+}
+
+.livro form div #btn-delete {
+    color: #FF6347;
 }
 
 .react-datepicker__navigation-icon {
