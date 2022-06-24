@@ -180,7 +180,7 @@ function Livro() {
   return(
     <div className='livro'>
       <Cabecalho/>
-      <Titulo descricao={id ? 'Livro' : 'Novo'}>
+      <Titulo descricao={id ? 'LIVRO' : 'NOVO'}>
         {
            id && editando ? <FiEdit size={25}/> :
            id && !editando ? <GrView size={25}/> : 

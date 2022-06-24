@@ -1,37 +1,122 @@
-table tbody tr td {
-    vertical-align: baseline;
+@media only screen and (max-width: 599px) {
+
+    thead tr {
+        display: none;
+    }    
+
+    table tr td {
+        display: flex;
+    }    
+    
+    table tr td div {
+        margin-left: auto;
+        padding-bottom: 1em;
+        padding-right: 0.8em;
+    }
+
+    table tr td div a {
+        font-size: x-large;
+    }
+
+    .acoes {
+        text-align: end;
+        padding-bottom: 1em;
+        padding-right: 0.8em;
+    }
+
+    .acoes a {
+        cursor: pointer;
+    }
+
+    .acoes a span {
+        display: none;
+    }
+
+    .footer {
+        text-align: center;
+        margin-bottom: 1.5em;
+    }
+
+    .footer a {
+        cursor: pointer;
+    }
+
+    .footer a span {
+        display: none;
+    }
 }
 
-table tbody tr td a {
-    margin-left: 10px;
-    cursor: pointer;
-    font-size: x-large;
-}
 
-.botoes {
-    margin: 5px;
-    margin-bottom: 65px;
-}
 
-.botoes button {
-    min-width: 120px;
-    float: right;
-}
 
-.botoes button:hover  {
-    opacity: 1;
-    font-style: italic;
-    font-weight: bold;
-    transform: scale(1.1);
-}
+@media only screen and (min-width: 600px) {
 
-.carregar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-}
+    thead tr th:first-child {
+        text-align: center;
+    }
 
-.carregar button span {
-    margin-left: 2px;
+    thead tr th:nth-child(3) {
+        text-align: center;
+    }
+
+    tbody tr td {
+        vertical-align: -webkit-baseline-middle;
+    }
+
+    tbody tr td:first-child {
+        text-align: center;
+    }
+
+    tbody tr td:last-child {
+        text-align: center;
+    }
+
+    tbody tr td a {
+        font-size: x-large;
+        cursor: pointer;
+    }
+
+    .acoes {
+        margin: 0;
+        min-height: 35px;
+    }
+
+    .acoes a {
+        min-width: 120px;
+        margin-right: 0.8em;
+        cursor: pointer;
+        float: right;
+    }
+
+    .acoes a span {
+        margin-right: 1.5em;
+        color: #1E90FF !important;
+    }
+    
+    .acoes a svg {
+        display: none;
+    }
+    
+    .acoes a:hover  {
+        opacity: 1;
+        font-style: italic;
+        font-weight: bold;
+        transform: scale(1.1);
+    }
+
+    .footer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .footer a {
+        cursor: pointer;
+    }
+    
+    .footer a span {
+        margin-left: 2px;
+    }
+
 }

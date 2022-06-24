@@ -2,11 +2,11 @@ import Carregando from '../../components/Carregando'
 import Cabecalho from '../../components/Cabecalho'
 import { useContext, useState, useEffect, useMemo } from 'react';
 import { ApiBackend } from '../../services/api'
-import { GrView } from 'react-icons/gr';
+import { GrView, GrAddCircle } from 'react-icons/gr';
 import { FiList } from "react-icons/fi";
 import { CgSearchLoading } from "react-icons/cg"
 import { AutenticacaoContext } from '../../contexts/autenticacao';
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button  } from 'react-bootstrap';
 import { Link, useNavigate  } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Titulo from '../../components/Titulo';
@@ -95,11 +95,14 @@ function Livros() {
   return(
   <>
     <Cabecalho/>
-    <Titulo descricao="Livros">
+    <Titulo descricao="LIVROS">
       <FiList size={25}/>
     </Titulo>
-    <div className='botoes'>
-      <Button variant="primary" size="sm" onClick={cadastrar}>NOVO</Button>
+    <div className='acoes'>
+      <a onClick={cadastrar}>
+        <GrAddCircle size={25}/>
+        <span>CADASTRAR NOVO</span>
+      </a>
     </div>
     {livros.length === 0 ? (        
       <>
@@ -109,17 +112,7 @@ function Livros() {
                     </>
                     ) : (
                     <>
-                    <h3>SEM REGISTROS</h3>
-                    {exibirBotaoVejaMais && 
-                      <div className='carregar'>
-                        <Button variant="primary" disabled={loading} onClick={loading ? null : buscarMaisLivros}>
-                            <CgSearchLoading size={20}/> 
-                            <span>
-                              {loading ? 'Loading…' : 'Veja mais'}
-                            </span>
-                        </Button>
-                      </div>  
-                    }        
+                      <h3>SEM REGISTROS</h3>
                     </>
                     )
         }
@@ -144,9 +137,11 @@ function Livros() {
                         <td>{livro.descricao}</td>
                         <td>{livro.autor}</td>                        
                         <td>
+                          <div>
                             <Link className='btn-edit' to={`/livro/${livro.id}`}>
-                                <GrView key={livro.id} title="Visualizar"/>
+                                <GrView key={livro.id} title="Detalhes"/>
                             </Link>
+                          </div>
                         </td>
                     </tr>                            
                 )
@@ -154,14 +149,15 @@ function Livros() {
         }                
         </tbody>
     </Table>        
+    
     {exibirBotaoVejaMais && 
-      <div className='carregar'>
-        <Button variant="primary" disabled={loading} onClick={loading ? null : buscarMaisLivros}>
-            <CgSearchLoading size={20}/> 
+      <div className='footer'>
+        <a variant="primary" disabled={loading} onClick={loading ? null : buscarMaisLivros} title='Buscar mais'>
+            <CgSearchLoading size={40}/> 
             <span>
-              {loading ? 'Loading…' : 'Veja mais'}
+              {loading ? 'Carregando' : 'Veja mais'}
             </span>
-        </Button>
+        </a>
       </div>  
     }
     {loading && <Carregando carregando={loading}/>}
