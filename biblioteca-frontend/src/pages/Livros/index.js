@@ -1,5 +1,6 @@
 import Carregando from '../../components/Carregando'
 import Cabecalho from '../../components/Cabecalho'
+import SemRegistro from '../../components/SemRegistro'
 import { useContext, useState, useEffect, useMemo } from 'react';
 import { ApiBackend } from '../../services/api'
 import { GrView, GrAddCircle } from 'react-icons/gr';
@@ -106,15 +107,9 @@ function Livros() {
     </div>
     {livros.length === 0 ? (        
       <>
-        {loading ? (
-                    <>
-                      <Carregando carregando={loading}/>
-                    </>
-                    ) : (
-                    <>
-                      <h3>SEM REGISTROS</h3>
-                    </>
-                    )
+        {loading ? 
+          (<><Carregando carregando={loading}/></>) : 
+          (<><SemRegistro/></>)
         }
           
       </>) : (

@@ -1,0 +1,15 @@
+.alert {
+    margin: auto;
+    max-width: 96%;
+    text-align: center;
+}
+
+.alert svg {
+    margin-right: 0.5em;
+}
+
+.alert span {
+    font-size: larger;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+}

@@ -51,6 +51,11 @@
 
 @media only screen and (min-width: 600px) {
 
+    table {
+        table-layout: fixed;
+        word-wrap:break-word;
+    }
+
     thead tr th:first-child {
         text-align: center;
     }
@@ -64,7 +69,7 @@
     }
 
     tbody tr td:first-child {
-        text-align: center;
+        text-align: center;  
     }
 
     tbody tr td:last-child {
