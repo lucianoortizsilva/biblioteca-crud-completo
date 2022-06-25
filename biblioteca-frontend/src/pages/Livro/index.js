@@ -9,6 +9,7 @@ import { GrView } from 'react-icons/gr';
 import { Nav, Container, Form, FormGroup } from 'react-bootstrap';
 import DatePicker, { registerLocale } from "react-datepicker";
 import Titulo from '../../components/Titulo';
+import ModalConfirma from '../../components/ModalConfirma'
 import pt from 'date-fns/locale/pt-BR';
 import './livro.css'
 import "react-datepicker/dist/react-datepicker.css";
@@ -22,14 +23,14 @@ function Livro() {
   const [loading, setLoading] = useState(true);
   const [editando, setEditando] = useState(false);
   const [removido, setRemovido] = useState(false);
-  const {token, deslogar } = useContext(AutenticacaoContext);
-  
+  const {token, deslogar } = useContext(AutenticacaoContext);  
   const [codigo, setCodigo] = useState('');
   const [isbn, setIsbn] = useState('');
   const [autor, setAutor] = useState('');
   const [descricao, setDescricao] = useState('');
   const [dtLancamento, setDtLancamento] = useState(new Date());
-  
+  const [exibirModal, setExibirModal] = useState(false);
+
   const navigate = useNavigate();
   
   useEffect(()=> {
@@ -242,12 +243,14 @@ function Livro() {
             <Nav.Link id='btn-edit' onClick={()=> setEditando(true)} disabled={editando || removido} readOnly={editando || removido} hidden={editando}>
               <FiEdit title="Editar" disabled={editando || removido} readOnly={editando || removido}/>              
             </Nav.Link>
-            <Nav.Link id='btn-delete' onClick={()=> deletar()} disabled={removido} readOnly={removido}>
+            <Nav.Link id='btn-delete' onClick={()=> setExibirModal(true)} disabled={removido} readOnly={removido}>
               <FaTrashAlt title="Deletar" disabled={removido} readOnly={removido}/>
             </Nav.Link>
           </FormGroup>
         </Form>
       </Container>
+
+      <ModalConfirma show={exibirModal} onHide={() => setExibirModal(false)} onConfirme={()=> deletar()} />
     </div>
   )
 }

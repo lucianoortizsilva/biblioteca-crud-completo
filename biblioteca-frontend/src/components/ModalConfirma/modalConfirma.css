@@ -1,0 +1,8 @@
+.modal-dialog .modal-content .modal-body {
+    text-align: center;
+}
+
+.modal-dialog .modal-content .modal-body p {
+    font-size: x-large;
+    margin-bottom: 0;
+}

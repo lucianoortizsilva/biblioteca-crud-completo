@@ -19,7 +19,6 @@ function Livros() {
   const [paginaProxima, setPaginaProxima] = useState(0);
   const [loading, setLoading] = useState(true);
   const [livros, setLivros] = useState([]);
-  
   const {token, deslogar} = useContext(AutenticacaoContext);
   const paginaParaPesquisar = useMemo(() => paginaProxima, [paginaProxima]);
   const navigate = useNavigate();
