@@ -1,17 +1,16 @@
 import Carregando from '../../components/Carregando'
 import Cabecalho from '../../components/Cabecalho'
 import SemRegistro from '../../components/SemRegistro'
-import { useContext, useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { ApiBackend } from '../../services/api'
 import { GrView, GrAddCircle } from 'react-icons/gr';
 import { FiList } from "react-icons/fi";
-import { CgSearchLoading } from "react-icons/cg"
-import { AutenticacaoContext } from '../../contexts/autenticacao';
-import { Table, Button  } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 import { Link, useNavigate  } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Titulo from '../../components/Titulo';
 import './livros.css'
+import BotaoVejaMais from '../../components/BotaoVejaMais';
 
 function Livros() {
 
@@ -19,8 +18,7 @@ function Livros() {
   const [paginaProxima, setPaginaProxima] = useState(0);
   const [loading, setLoading] = useState(true);
   const [livros, setLivros] = useState([]);
-  const {token, deslogar} = useContext(AutenticacaoContext);
-  const paginaParaPesquisar = useMemo(() => paginaProxima, [paginaProxima]);
+    const paginaParaPesquisar = useMemo(() => paginaProxima, [paginaProxima]);
   const navigate = useNavigate();
   
   /**
@@ -143,17 +141,11 @@ function Livros() {
         }                
         </tbody>
     </Table>        
-    
-    {exibirBotaoVejaMais && 
-      <div className='footer'>
-        <a variant="primary" disabled={loading} onClick={loading ? null : buscarMaisLivros} title='Buscar mais'>
-            <CgSearchLoading size={40}/> 
-            <span>
-              {loading ? 'Carregando' : 'Veja mais'}
-            </span>
-        </a>
-      </div>  
-    }
+
+    <div className='footer'>
+      {exibirBotaoVejaMais && <BotaoVejaMais desabilitar={loading} handleClick={loading ? null : buscarMaisLivros}/>}
+    </div>    
+
     {loading && <Carregando carregando={loading}/>}
   </>
   )}
@@ -162,3 +154,4 @@ function Livros() {
 }
 
 export default Livros;
+
