@@ -1,10 +1,14 @@
 package com.biblioteca.security.token;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.biblioteca.security.authentication.user.Role;
 import com.biblioteca.util.JsonUtil;
 
 import io.jsonwebtoken.Claims;
@@ -26,15 +30,17 @@ public class TokenJwt {
 	
 	
 	
-	public String generateToken(final String username) {
+	public String generateToken(final String username, final List<Role> roles) {
 		final Date dhExpiration = new Date(System.currentTimeMillis() + expiration);
+		
+		final Map<String, Object> claims = new HashMap<>();
+		claims.put("roles", roles);
+		claims.put("exp", dhExpiration);
+		claims.put("username", username);
+		
 		final byte[] secretKey = secret.getBytes();
 		log.info("Date hora expiração: {}", dhExpiration);
-		return Jwts.builder()
-				.setSubject(username)
-				.setExpiration(dhExpiration)
-				.signWith(SignatureAlgorithm.HS512, secretKey)
-				.compact();
+		return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secretKey).compact();
 	}
 
 	
@@ -48,13 +54,13 @@ public class TokenJwt {
 	
 	
 	public String updateExpirationDateToken(final String authorization) {
-		Claims claims = getClaimsFromToken(authorization);
 		final Date dhExpiration = new Date(System.currentTimeMillis() + expiration);
+		Claims claims = getClaimsFromToken(authorization);
+		claims.put("exp", dhExpiration);
 		final byte[] secretKey = secret.getBytes();
 		log.info("Date hora expiração renovada até: {}", dhExpiration);
 		return Jwts.builder()
 				.setClaims(claims)
-				.setExpiration(dhExpiration)
 				.signWith(SignatureAlgorithm.HS512, secretKey)
 				.compact();
 	}
@@ -91,7 +97,7 @@ public class TokenJwt {
 
 	
 	
-	private static void validarDataHoraExpiracao(final Integer expiration) {
+	private static void validarDataHoraExpiracao(final Long expiration) {
 		final Date dhExpiration = new Date((long) expiration * 1000);
 		if (dhExpiration.getTime() < new Date(System.currentTimeMillis()).getTime()) {
 			throw new TokenJwtException("Token Expirado em: " + dhExpiration);

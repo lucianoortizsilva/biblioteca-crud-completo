@@ -63,7 +63,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
 		final String username = ((User) authentication.getPrincipal()).getUsername();
-		final String token = this.tokenJwt.generateToken(username);
+		final User user = (User) this.userService.loadUserByUsername(username);
+		final String token = this.tokenJwt.generateToken(username, user.getRoles());
 		response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 		response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.AUTHORIZATION);
 		log.info("Authorization: Bearer {}", token);
