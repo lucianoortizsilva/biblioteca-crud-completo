@@ -2,7 +2,6 @@ package com.biblioteca.security.token;
 
 import java.util.List;
 
-import com.biblioteca.security.authentication.user.Role;
 import com.google.gson.annotations.SerializedName;
 
 import lombok.Getter;
@@ -12,13 +11,13 @@ import lombok.Setter;
 @Setter
 public class Payload {
 
-	@SerializedName("username")
-	private String login;
-
-	@SerializedName(value = "exp")
+	@SerializedName(value = "dhExpiration")
 	private Long expiration;
 
-	@SerializedName(value = "roles")
-	private List<Role> roles;
+	@SerializedName(value = "authorities")
+	private List<String> authorities;
+
+	@SerializedName("username")
+	private String login;
 
 }

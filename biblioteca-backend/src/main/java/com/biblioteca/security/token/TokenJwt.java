@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import com.biblioteca.security.authentication.user.Role;
 import com.biblioteca.util.JsonUtil;
 
 import io.jsonwebtoken.Claims;
@@ -30,13 +30,14 @@ public class TokenJwt {
 	
 	
 	
-	public String generateToken(final String username, final List<Role> roles) {
+	public String generateToken(final String username, final List<GrantedAuthority> grantedAuthority) {
 		final Date dhExpiration = new Date(System.currentTimeMillis() + expiration);
+		final List<String> authorities = grantedAuthority.stream().map(granted -> granted.getAuthority()).toList();
 		
 		final Map<String, Object> claims = new HashMap<>();
-		claims.put("roles", roles);
-		claims.put("exp", dhExpiration);
 		claims.put("username", username);
+		claims.put("authorities", authorities);
+		claims.put("dhExpiration", dhExpiration);
 		
 		final byte[] secretKey = secret.getBytes();
 		log.info("Date hora expiração: {}", dhExpiration);
@@ -56,7 +57,8 @@ public class TokenJwt {
 	public String updateExpirationDateToken(final String authorization) {
 		final Date dhExpiration = new Date(System.currentTimeMillis() + expiration);
 		Claims claims = getClaimsFromToken(authorization);
-		claims.put("exp", dhExpiration);
+		claims.put("dhExpiration", dhExpiration);
+		
 		final byte[] secretKey = secret.getBytes();
 		log.info("Date hora expiração renovada até: {}", dhExpiration);
 		return Jwts.builder()

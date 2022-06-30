@@ -41,7 +41,7 @@ public class UserService implements UserDetailsService {
 		return new UsernamePasswordAuthenticationToken(username, password);
 	}
 
-	private List<String> getPermissions(final List<Role> roles) {
+	public List<String> getPermissions(final List<Role> roles) {
 		final List<String> permissionsAll = new ArrayList<>();
 		final List<Permission> permissions = new ArrayList<>();
 		for (final Role role : roles) {
@@ -54,7 +54,7 @@ public class UserService implements UserDetailsService {
 		return permissionsAll;
 	}
 
-	private List<GrantedAuthority> getGrantedAuthorities(final List<String> permissions) {
+	public List<GrantedAuthority> getGrantedAuthorities(final List<String> permissions) {
 		final List<GrantedAuthority> grantedAuthority = new ArrayList<>();
 		for (final String permission : permissions) {
 			grantedAuthority.add(new SimpleGrantedAuthority(permission));

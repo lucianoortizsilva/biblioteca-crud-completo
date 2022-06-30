@@ -1,6 +1,7 @@
 package com.biblioteca.security.authentication.login;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -64,7 +66,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
 		final String username = ((User) authentication.getPrincipal()).getUsername();
 		final User user = (User) this.userService.loadUserByUsername(username);
-		final String token = this.tokenJwt.generateToken(username, user.getRoles());
+		
+		final List<String> permissions = userService.getPermissions(user.getRoles());
+		final List<GrantedAuthority> authorities = userService.getGrantedAuthorities(permissions);
+		
+		final String token = this.tokenJwt.generateToken(username, authorities);
 		response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 		response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.AUTHORIZATION);
 		log.info("Authorization: Bearer {}", token);
