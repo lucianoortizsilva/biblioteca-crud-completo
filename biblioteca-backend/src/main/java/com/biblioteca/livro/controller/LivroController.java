@@ -58,7 +58,7 @@ public class LivroController {
 	
 	
 	@PutMapping(value = "/{id}")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENTE')")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_FUNCIONARIO')")
 	public ResponseEntity<Void> update(@RequestBody @Valid @P("dto") final LivroDTO dto, @PathVariable(value = "id", required = true) final Long id) {
 		dto.setId(id);
 		this.livroService.update(dto);
@@ -77,7 +77,7 @@ public class LivroController {
 	
 	
 	@GetMapping(value = "/{id}")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENTE') or hasAuthority('ROLE_SUPORTE')")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_FUNCIONARIO') or hasAuthority('ROLE_SUPORTE')")
 	public ResponseEntity<Livro> findById(@PathVariable(value = "id", required = true) final Long id) {
 		return ResponseEntity.ok().body(this.livroService.findById(id));
 	}

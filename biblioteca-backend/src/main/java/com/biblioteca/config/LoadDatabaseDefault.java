@@ -52,7 +52,7 @@ public class LoadDatabaseDefault implements ApplicationListener<ContextRefreshed
 		final Permission delete = createPermissionIfNotFound(PermissionEnum.DELETE.name());
 
 		final Role roleAdmin = createRoleIfNotFound(RoleEnum.ROLE_ADMIN, Arrays.asList(create, read, update, delete));
-		final Role roleCliente = createRoleIfNotFound(RoleEnum.ROLE_CLIENTE, Arrays.asList(read, update));
+		final Role roleCliente = createRoleIfNotFound(RoleEnum.ROLE_FUNCIONARIO, Arrays.asList(read, update));
 		final Role roleSuporte = createRoleIfNotFound(RoleEnum.ROLE_SUPORTE, Arrays.asList(read));
 
 		createUserIfNotFound("luciano@fakeMail.com", roleAdmin);

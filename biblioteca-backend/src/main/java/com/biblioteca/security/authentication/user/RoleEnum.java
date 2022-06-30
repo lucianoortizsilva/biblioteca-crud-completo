@@ -9,6 +9,6 @@ public enum RoleEnum {
 
 	ROLE_SUPORTE,
 
-	ROLE_CLIENTE;
+	ROLE_FUNCIONARIO;
 
 }
