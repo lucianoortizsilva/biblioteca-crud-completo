@@ -1,7 +1,7 @@
 import Carregando from '../../components/Carregando'
 import Cabecalho from '../../components/Cabecalho'
 import SemRegistro from '../../components/SemRegistro'
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useContext } from 'react';
 import { ApiBackend } from '../../services/api'
 import { GrView, GrAddCircle } from 'react-icons/gr';
 import { FiList } from "react-icons/fi";
@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import Titulo from '../../components/Titulo';
 import './livros.css'
 import BotaoVejaMais from '../../components/BotaoVejaMais';
+import { useCookies } from 'react-cookie';
 
 function Livros() {
 
@@ -18,7 +19,10 @@ function Livros() {
   const [paginaProxima, setPaginaProxima] = useState(0);
   const [loading, setLoading] = useState(true);
   const [livros, setLivros] = useState([]);
-    const paginaParaPesquisar = useMemo(() => paginaProxima, [paginaProxima]);
+  const paginaParaPesquisar = useMemo(() => paginaProxima, [paginaProxima]);
+  const [cookie] = useCookies();
+  
+
   const navigate = useNavigate();
   
   /**
@@ -46,8 +50,7 @@ function Livros() {
 
 
   async function buscarLivros() {
-    console.log('Buscando livros da página: ' + paginaParaPesquisar );
-    await ApiBackend.get(`/livros/pageable?page=${paginaParaPesquisar}`)
+    await ApiBackend.get(`/livros/pageable?page=${paginaParaPesquisar}`,{headers:{"Authorization": cookie.Authorization}})
     .then(function(response) {
       let encontrouLivros = response.data.content.length > 0;
       if(encontrouLivros) {

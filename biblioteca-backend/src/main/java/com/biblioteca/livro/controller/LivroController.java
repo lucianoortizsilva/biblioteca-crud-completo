@@ -35,8 +35,8 @@ public class LivroController {
 
 	private LivroService livroService;
 
-	@PreAuthorize("permitAll")
 	@GetMapping(value = "/pageable")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_FUNCIONARIO') or hasAuthority('ROLE_SUPORTE')")
 	public ResponseEntity<Page<Livro>> getAllLivros(
 			@RequestParam(required = false, name = "descricao") String descricao,
 			@RequestParam(required = false, defaultValue = "0") int page, 

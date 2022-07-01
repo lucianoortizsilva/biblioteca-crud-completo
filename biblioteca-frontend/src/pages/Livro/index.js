@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useContext, useState, useEffect } from 'react'; 
+import { useContext, useState, useEffect, useCallback } from 'react'; 
 import { toast } from 'react-toastify';
 import { ApiBackend } from '../../services/api'
 import { AutenticacaoContext } from '../../contexts/autenticacao';
@@ -150,31 +150,36 @@ function Livro() {
 
 
 
-  async function deletar() {
-    setLoading(true);
-    await ApiBackend.delete(`/livros/${id}`,{headers:{"Authorization": token}})
-    .then(function(response) {
-      console.log(JSON.stringify(response));
-      setRemovido(true);
-      toast.success('Removido com sucesso!');
-      navigate("/livros",{ replace: true });
-    })
-    .catch(function(error) {
-      if(error.code === 'ERR_NETWORK'){
-        toast.error('Indisponível! Tente mais tarde');
-      } else if(401 === error.response.data.status){
-        toast.warn(error.response.data.mensagem);
-        deslogar();
-      } else if(error.response.data.status >= 400 && error.response.data.status <= 500) {
-        toast.error(error.response.data.mensagem);
-      } else {
-        toast.error('Erro inesperado!');
-      }
-    })
-    .finally(()=>{
-      setLoading(false);
-    });;
-  }
+  const deletar = useCallback((e)=> {
+    e.preventDefault();
+    
+    async function remover() {
+      try {
+        setLoading(true);
+        const response = await ApiBackend.delete(`/livros/${id}`,{headers:{"Authorization": token}});
+        console.log(JSON.stringify(response));
+        setRemovido(true);
+        toast.success('Removido com sucesso!');
+        navigate("/livros",{ replace: true });        
+      } catch (error) {
+        if(error.code === 'ERR_NETWORK'){
+          toast.error('Indisponível! Tente mais tarde');
+        } else if(401 === error.response.data.status){
+          toast.warn(error.response.data.mensagem);
+          deslogar();
+        } else if(error.response.data.status >= 400 && error.response.data.status <= 500) {
+          toast.error(error.response.data.mensagem);
+        } else {
+          toast.error('Erro inesperado!');
+        }        
+      } finally {
+        setLoading(false);
+      }      
+    }
+
+    remover();
+
+  }, [])
 
 
 
@@ -250,7 +255,10 @@ function Livro() {
         </Form>
       </Container>
 
-      <ModalConfirma show={exibirModal} onHide={() => setExibirModal(false)} onConfirme={()=> deletar()} />
+      <ModalConfirma show={exibirModal}
+                     onConfirme={(e)=> deletar(e)}
+                     onHide={()=> setExibirModal(false)}/>
+                     
     </div>
   )
 }
