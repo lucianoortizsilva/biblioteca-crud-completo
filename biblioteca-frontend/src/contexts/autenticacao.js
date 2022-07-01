@@ -9,11 +9,11 @@ export const AutenticacaoContext = createContext({});
 function AutenticacaoProvider({ children }) {
   
   const headers = [{"Access-Control-Allow-Origin": "*"},{"Access-Control-Allow-Headers": "access-control-allow-origin, access-control-allow-headers"}]
+  
   const [token, setToken] = useState(null);
-  const [cookie, setCookie, removeCookie] = useCookies();
   const [logado, setLogado] = useState(true);
+  const [cookie, setCookie, removeCookie] = useCookies();
   const [autenticando, setAutenticando] = useState(false);
-
 
 
   useEffect(()=> {

@@ -1,5 +1,4 @@
-
-.title{
+.title {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -9,7 +8,7 @@
     padding: .8em;
   }
   
-  .title span{
+  .title span {
     margin-left: 1em;
     font-size: 1.5em;
   }

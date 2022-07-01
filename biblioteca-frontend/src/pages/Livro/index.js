@@ -99,7 +99,8 @@ function Livro() {
     await ApiBackend.post(`/livros`, JSON.stringify(body), header)
     .then(response => {
       console.log(JSON.stringify(response));
-      toast.success('Salvou com sucesso!');
+      toast.success('Criado com sucesso!');
+      navigate("/livros",{ replace: true });        
     })
     .catch(error => {
       console.log(JSON.stringify(error));
@@ -128,7 +129,8 @@ function Livro() {
     await ApiBackend.put(`/livros/${id}`, JSON.stringify(body), header)
     .then(response => {
       console.log(JSON.stringify(response));
-      toast.success('Salvou com sucesso!');
+      toast.success('Atualizado com sucesso!');
+      navigate("/livros",{ replace: true });        
     })
     .catch(error => {
       console.log(JSON.stringify(error));
@@ -248,8 +250,8 @@ function Livro() {
             <Nav.Link id='btn-edit' onClick={()=> setEditando(true)} disabled={editando || removido} readOnly={editando || removido} hidden={editando}>
               <FiEdit title="Editar" disabled={editando || removido} readOnly={editando || removido}/>              
             </Nav.Link>
-            <Nav.Link id='btn-delete' onClick={()=> setExibirModal(true)} disabled={removido} readOnly={removido}>
-              <FaTrashAlt title="Deletar" disabled={removido} readOnly={removido}/>
+            <Nav.Link id='btn-delete' onClick={()=> setExibirModal(true)} hidden={!id}>
+              <FaTrashAlt title="Deletar"/>
             </Nav.Link>
           </FormGroup>
         </Form>

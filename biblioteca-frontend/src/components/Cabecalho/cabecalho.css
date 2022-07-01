@@ -1,20 +1,40 @@
+.navbar .navbar-nav {
+    display: table;
+}
+
 .navbar .navbar-text h5 {
-    color: #FA5858;
-}
-
-.navbar .navbar-collapse .nav-item .nav-link  {
-    color: #FFF;
-    font-size: 18px;
-}
-
-.navbar .navbar-collapse .nav-item .btn-sair  {
-    font-size: x-large;
+    color: #FA5858;    
 }
 
 .navbar .navbar-nav .nav-item a:hover {
     color: #F7FE2E;
 }
 
+.navbar .navbar-collapse .nav-item .nav-link  {
+    color: #FFF;
+    font-size: 1.25em;
+    display:table-cell;
+    vertical-align:middle;
+}
+
+.navbar .navbar-collapse .nav-item .btn-sair  {
+    font-size: x-large;    
+}
+
 .navbar .navbar-collapse .nav-item .nav-link :hover {
     color: #FE2E2E;   
+}
+
+.perfil {    
+    display: flow-root;        
+}
+
+.perfil p  {
+    color: #0000FF;
+    font-size: 1.25em;
+    padding-right: 0.6em;
+    padding-top: 0.4em;  
+    font-style: italic;
+    font-family: 'Courier New', Courier, monospace;        
+    float: right;
 }

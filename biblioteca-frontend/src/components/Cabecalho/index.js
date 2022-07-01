@@ -1,14 +1,15 @@
 import { AutenticacaoContext } from '../../contexts/autenticacao';
 import { Navbar, Nav } from 'react-bootstrap';
 import { useContext } from 'react';
+import { useCookies } from 'react-cookie';
 import logo from '../../assets/logo.png'
 import { AiOutlinePoweroff } from 'react-icons/ai'
 import './cabecalho.css'
 
 function Cabecalho() {
         
+    const [cookie] = useCookies();
     const { deslogar } = useContext(AutenticacaoContext);
-
 
     function submitSair(e) {
         e.preventDefault();    
@@ -18,7 +19,7 @@ function Cabecalho() {
 
         
     return (
-        <div>
+        <>
             <Navbar bg="dark" variant="dark">
                 
                 <Navbar.Brand>
@@ -55,8 +56,12 @@ function Cabecalho() {
                     </Nav.Item>
                 </Nav>
 
-            </Navbar>                
-        </div>
+            </Navbar>   
+            
+            <div className='perfil'>
+                <p>{cookie.Payload.username}</p>
+            </div>             
+        </>
     )
 }
 
