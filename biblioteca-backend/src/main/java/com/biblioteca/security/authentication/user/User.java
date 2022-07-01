@@ -35,6 +35,12 @@ public class User implements UserDetails {
 	@Column(name = "username", unique = true, nullable = false)
 	private String username;
 
+	@Column(name = "firstName", nullable = false)
+	private String firstName;
+
+	@Column(name = "lastName", nullable = false)
+	private String lastName;
+
 	@Column(name = "password", nullable = false)
 	private String password;
 
@@ -53,8 +59,15 @@ public class User implements UserDetails {
 
 	private boolean credentialsNonExpired = true;
 
-	public User(final String username, final String password, final Boolean enabled, final List<Role> roles) {
+	public User(final String username, 
+				final String lastName,
+				final String firstName,
+			    final String password, 
+			    final Boolean enabled, final 
+			    List<Role> roles) {
 		this.username = username;
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.password = password;
 		this.enabled = enabled;
 		this.roles = roles;

@@ -20,4 +20,10 @@ public class Payload {
 	@SerializedName("username")
 	private String login;
 
+	@SerializedName("firstName")
+	private String firstName;
+
+	@SerializedName("lastName")
+	private String lastName;
+
 }

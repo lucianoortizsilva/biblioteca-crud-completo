@@ -70,7 +70,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 		final List<String> permissions = userService.getPermissions(user.getRoles());
 		final List<GrantedAuthority> authorities = userService.getGrantedAuthorities(permissions);
 		
-		final String token = this.tokenJwt.generateToken(username, authorities);
+		final String token = this.tokenJwt.generateToken(username, user.getFirstName(), user.getLastName(), authorities);
 		response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 		response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.AUTHORIZATION);
 		log.info("Authorization: Bearer {}", token);

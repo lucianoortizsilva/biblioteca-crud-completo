@@ -55,9 +55,9 @@ public class LoadDatabaseDefault implements ApplicationListener<ContextRefreshed
 		final Role roleCliente = createRoleIfNotFound(RoleEnum.ROLE_FUNCIONARIO, Arrays.asList(read, update));
 		final Role roleSuporte = createRoleIfNotFound(RoleEnum.ROLE_SUPORTE, Arrays.asList(read));
 
-		createUserIfNotFound("luciano@fakeMail.com", roleAdmin);
-		createUserIfNotFound("mariana@fakeMail.com", roleCliente);
-		createUserIfNotFound("vanessa@fakeMail.com", roleSuporte);
+		createUserIfNotFound("luciano@fakeMail.com", "Ortiz", "Silva", roleAdmin);
+		createUserIfNotFound("mariana@fakeMail.com", "Ortiz Silva", "",  roleCliente);
+		createUserIfNotFound("vanessa@fakeMail.com", "Almeida", "Silva",  roleSuporte);
 
 		createLivroIfNotFound("978-1-119-61762-4", "Oracle Certified Professional Java SE 11 Programmer II", "Scott Selikoff", LocalDate.of(2020, 01, 01));
 		createLivroIfNotFound("978-85-7608-325-2", "EJB 3 em acao", "Debu Panda", LocalDate.of(2009, 01, 01));
@@ -98,11 +98,11 @@ public class LoadDatabaseDefault implements ApplicationListener<ContextRefreshed
 	}
 
 	@Transactional
-	private void createUserIfNotFound(final String username, final Role role) {
+	private void createUserIfNotFound(final String username, final String firstName, final String lasttName, final Role role) {
 		Optional<User> user = userRepository.findByUsername(username);
 		if (user.isEmpty()) {
 			final String password = bCryptPasswordEncoder.encode("12345");
-			userRepository.save(new User(username, password, true, Arrays.asList(role)));
+			userRepository.save(new User(username, firstName, lasttName, password, true, Arrays.asList(role)));
 		}
 	}
 
