@@ -35,20 +35,25 @@ No client de sua preferência, estou utilizando o [insomnia](https://insomnia.re
 > **POST** **`http://localhost:8080/login`**
 ```json
 {
-	"username" : "luciano@fakeMail.com",
+	"username" : "admin@biblioteca.com",
 	"password" : "12345"
 }
 ```
-Copie do HEADER a Authorization retornada, para utilizar em outros endpoints.
+Copie do HEADER a Authorization retornada, e adicione nos outros endpoints.
 
 <hr>
 
-*3º Buscar Livro:* (Necessário adicionar 'Authorization: Bearer ...' no header)
+*3º Buscar Livros:* (Necessário adicionar 'Authorization: Bearer ...' no header)
+> **GET** **`http://localhost:8080/livros/pageable`**
+
+<hr>
+
+*4º Buscar Livro:* (Necessário adicionar 'Authorization: Bearer ...' no header)
 > **GET** **`http://localhost:8080/livros/1`**
 
 <hr>
 
-*4º Atualizar Livro:* (Necessário adicionar 'Authorization: Bearer ...' no header)
+*5º Atualizar Livro:* (Necessário adicionar 'Authorization: Bearer ...' no header)
 > **PUT** **`http://localhost:8080/Livro/1`**
 ```json
 {
@@ -61,7 +66,7 @@ Copie do HEADER a Authorization retornada, para utilizar em outros endpoints.
 
 <hr>
 
-*5º Deletar Livro:* (Necessário adicionar 'Authorization: Bearer ...' no header)
+*6º Deletar Livro:* (Necessário adicionar 'Authorization: Bearer ...' no header)
 > **DELETE** **`http://localhost:8080/livros/1`**
 
 <hr>
