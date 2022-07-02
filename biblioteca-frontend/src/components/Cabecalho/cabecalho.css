@@ -1,40 +1,104 @@
-.navbar .navbar-nav {
-    display: table;
+@media only screen and (max-width: 599px) {
+
+    nav {
+        background-color: #000;
+    }
+
+    nav .navbar-brand {
+        display: none;
+    }
+
+    nav .navbar-text {
+        display: none;
+    }
+    
+    nav .navbar-collapse .nav-item .nav-link  {
+        color: #FFF;
+        font-size: 1.25em;
+        display:table-cell;
+        vertical-align:middle;
+    }
+
+    nav .navbar-collapse .nav-item .nav-link:hover {
+        color: #F7FE2E;
+    }
+
+    nav span p {
+        font-size: 1.25em;
+        padding-right: 0.6em;
+        font-family: 'Courier New', Courier, monospace;        
+        line-height: 0em;
+    }
+
+    nav span p:first-child {    
+        color: #FFF;
+        padding-top: 0.8em;
+    }
+
+    nav span p:last-child {    
+        color: #F7FE2E;
+        padding-top: 0.4em;
+        font-style: italic;
+    }
+    
+    nav .navbar-collapse .nav-item #btn-sair  {
+        font-size: x-large;    
+    }
+
+    nav .navbar-collapse .nav-item #btn-sair:hover  {
+        color: #FE2E2E;   
+    }
+    
 }
 
-.navbar .navbar-text h5 {
-    color: #FA5858;    
-}
 
-.navbar .navbar-nav .nav-item a:hover {
-    color: #F7FE2E;
-}
 
-.navbar .navbar-collapse .nav-item .nav-link  {
-    color: #FFF;
-    font-size: 1.25em;
-    display:table-cell;
-    vertical-align:middle;
-}
+@media only screen and (min-width: 600px) {
+    
+    nav {
+        background-color: #000;
+    }
 
-.navbar .navbar-collapse .nav-item .btn-sair  {
-    font-size: x-large;    
-}
+    nav .navbar-collapse .nav-item .nav-link  {
+        color: #FFF;
+        font-size: 1.25em;
+        display:table-cell;
+        vertical-align:middle;
+    }
 
-.navbar .navbar-collapse .nav-item .nav-link :hover {
-    color: #FE2E2E;   
-}
+    nav .navbar-collapse .nav-item .nav-link:hover {
+        color: #F7FE2E;
+    }
 
-.perfil {    
-    display: flow-root;        
-}
+    nav span p {
+        line-height: 0em;
+    }
 
-.perfil p  {
-    color: #0000FF;
-    font-size: 1.25em;
-    padding-right: 0.6em;
-    padding-top: 0.4em;  
-    font-style: italic;
-    font-family: 'Courier New', Courier, monospace;        
-    float: right;
+    nav span p:first-child {    
+        color: #FFF;
+        padding-top: 0.8em;
+    }
+
+    nav span p:last-child {    
+        color: #F7FE2E;
+        padding-top: 0.4em;
+        font-style: italic;
+    }
+ 
+    nav .navbar-collapse:last-child {
+        max-width: 3em;
+    }
+
+    nav .navbar-collapse .nav-item #btn-sair  {
+        font-size: x-large;    
+    }
+
+    nav .navbar-collapse .nav-item #btn-sair:hover  {
+        color: #FE2E2E;   
+    }
+
+    nav .navbar-text h5 {
+        color: #FA5858;    
+    }
+ 
 }

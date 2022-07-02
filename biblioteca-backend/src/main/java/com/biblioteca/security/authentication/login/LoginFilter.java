@@ -66,10 +66,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
 		final String username = ((User) authentication.getPrincipal()).getUsername();
 		final User user = (User) this.userService.loadUserByUsername(username);
-		
 		final List<String> permissions = userService.getPermissions(user.getRoles());
 		final List<GrantedAuthority> authorities = userService.getGrantedAuthorities(permissions);
-		
 		final String token = this.tokenJwt.generateToken(username, user.getFirstName(), user.getLastName(), authorities);
 		response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 		response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.AUTHORIZATION);

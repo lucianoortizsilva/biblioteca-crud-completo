@@ -30,9 +30,14 @@ public class TokenJwt {
 	
 	
 	
-	public String generateToken(final String username, final String lastName, final String firstName, final List<GrantedAuthority> grantedAuthority) {
+	public String generateToken(final String username, final String firstName, final String lastName, final List<GrantedAuthority> grantedAuthority) {
 		final Date dhExpiration = new Date(System.currentTimeMillis() + expiration);
 		final List<String> authorities = grantedAuthority.stream().map(granted -> granted.getAuthority()).toList();
+		final String perfis = authorities.stream()
+				.filter(authority-> authority.startsWith("ROLE"))
+				.map(role-> role.split("_"))
+				.map(role-> role[1])
+				.reduce("", (x,y)-> (x + y));
 		
 		final Map<String, Object> claims = new HashMap<>();
 		claims.put("username", username);
@@ -40,6 +45,7 @@ public class TokenJwt {
 		claims.put("firstName", firstName);
 		claims.put("authorities", authorities);
 		claims.put("dhExpiration", dhExpiration);
+		claims.put("perfis", perfis);
 		
 		final byte[] secretKey = secret.getBytes();
 		log.info("Date hora expiração: {}", dhExpiration);

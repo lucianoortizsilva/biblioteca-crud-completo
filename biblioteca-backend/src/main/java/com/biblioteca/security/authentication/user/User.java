@@ -60,8 +60,8 @@ public class User implements UserDetails {
 	private boolean credentialsNonExpired = true;
 
 	public User(final String username, 
-				final String lastName,
 				final String firstName,
+				final String lastName,
 			    final String password, 
 			    final Boolean enabled, final 
 			    List<Role> roles) {
