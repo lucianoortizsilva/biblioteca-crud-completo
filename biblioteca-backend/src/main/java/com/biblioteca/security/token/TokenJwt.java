@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,7 +33,12 @@ public class TokenJwt {
 	
 	public String generateToken(final String username, final String firstName, final String lastName, final List<GrantedAuthority> grantedAuthority) {
 		final Date dhExpiration = new Date(System.currentTimeMillis() + expiration);
-		final List<String> authorities = grantedAuthority.stream().map(granted -> granted.getAuthority()).toList();
+		
+		final List<String> authorities = grantedAuthority
+				.stream()
+				.map(granted -> granted.getAuthority())
+				.collect(Collectors.toList());
+		
 		final String perfis = authorities.stream()
 				.filter(authority-> authority.startsWith("ROLE"))
 				.map(role-> role.split("_"))
