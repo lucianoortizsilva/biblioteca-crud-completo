@@ -14,5 +14,19 @@ services:
     networks:
       - network
 
+  service-biblioteca-frontend:
+    container_name: biblioteca-frontend-app
+    image: biblioteca-frontend-app:latest
+    build: 
+        context: ./biblioteca-frontend
+        dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./biblioteca-frontend/.env    
+    command: npm run start    
+    networks:
+      - network      
+
 networks:
   network: {}
