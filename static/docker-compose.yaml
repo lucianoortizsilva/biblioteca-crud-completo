@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  
+  service-biblioteca-backend:
+    container_name: biblioteca-backend-app
+    image: lucianoortizsilva/biblioteca-backend-app:latest
+    ports:
+      - "8080:8080"
+    command: ./mvnw spring-boot:run -Dspring-boot.run.profiles=docker
+    networks:
+      - network
+
+  service-biblioteca-frontend:
+    container_name: biblioteca-frontend-app
+    image: lucianoortizsilva/biblioteca-frontend-app:latest
+    ports:
+      - "3000:3000"    
+    networks:
+      - network
+
+networks:
+  network: {}
