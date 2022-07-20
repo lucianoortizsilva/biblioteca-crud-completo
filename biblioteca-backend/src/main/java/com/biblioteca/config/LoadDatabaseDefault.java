@@ -52,11 +52,11 @@ public class LoadDatabaseDefault implements ApplicationListener<ContextRefreshed
 		final Permission delete = createPermissionIfNotFound(PermissionEnum.DELETE.name());
 
 		final Role roleAdmin = createRoleIfNotFound(RoleEnum.ROLE_ADMIN, Arrays.asList(create, read, update, delete));
-		final Role roleCliente = createRoleIfNotFound(RoleEnum.ROLE_FUNCIONARIO, Arrays.asList(read, update));
+		final Role roleFuncionario = createRoleIfNotFound(RoleEnum.ROLE_FUNCIONARIO, Arrays.asList(read, update));
 		final Role roleSuporte = createRoleIfNotFound(RoleEnum.ROLE_SUPORTE, Arrays.asList(read));
 
 		createUserIfNotFound("admin@biblioteca.com", "Luciano", "Ortiz", roleAdmin);
-		createUserIfNotFound("cliente@biblioteca.com", "Mariana", "Silva",  roleCliente);
+		createUserIfNotFound("funcionario@biblioteca.com", "Mariana", "Silva",  roleFuncionario);
 		createUserIfNotFound("suporte@biblioteca.com", "Vanessa", "Silva",  roleSuporte);
 
 		createLivroIfNotFound("978-1-119-61762-4", "Oracle Certified Professional Java SE 11 Programmer II", "Scott Selikoff", LocalDate.of(2020, 01, 01));
