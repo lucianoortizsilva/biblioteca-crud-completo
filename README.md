@@ -15,5 +15,5 @@ No projeto backend:
 - Acesse http://localhost:3000
 - Faça login com algum usuário pré-cadastrado, conforme login/senha:\
 -- admin@biblioteca.com   / 12345 (Role admin)\
--- cliente@biblioteca.com / 12345 (Role cliente)\
+-- funcionario@biblioteca.com / 12345 (Role funcionário)\
 -- suporte@biblioteca.com / 12345 (Role suporte)
